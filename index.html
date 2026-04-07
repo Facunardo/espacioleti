@@ -71,54 +71,902 @@
     transition: background 0.2s !important;
   }
   .nav-cta:hover { background: var(--green-mid) !important; color: var(--white) !important; }
+
+  /* ─── HERO ─── */
+  #hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 120px 80px 80px;
+    position: relative; overflow: hidden;
+    background: var(--cream);
+  }
+
+  .hero-blob {
+    position: absolute; border-radius: 50%;
+    filter: blur(80px); opacity: 0.3; pointer-events: none;
+  }
+  .blob-1 { width: 600px; height: 600px; background: var(--green-pale); top: -100px; right: 0; }
+  .blob-2 { width: 400px; height: 400px; background: var(--terra-pale); bottom: -50px; left: 100px; }
+
+  .hero-text { position: relative; z-index: 2; padding-right: 60px; }
+
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 0.78rem; font-weight: 500; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--green-mid);
+    margin-bottom: 28px;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: block; width: 32px; height: 1px; background: var(--green-mid);
+  }
+
+  .hero-title {
+    font-size: clamp(3.2rem, 5vw, 5rem);
+    font-weight: 300; line-height: 1.08;
+    color: var(--green-deep); margin-bottom: 10px;
+  }
+  .hero-title em { font-style: italic; color: var(--terra); }
+
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+    font-weight: 300; font-style: italic;
+    color: var(--green-mid); margin-bottom: 32px; line-height: 1.3;
+  }
+
+  .hero-desc {
+    font-size: 1rem; line-height: 1.75;
+    color: var(--text-light); max-width: 460px; margin-bottom: 48px;
+  }
+
+  .hero-tags {
+    display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 48px;
+  }
+  .tag {
+    font-size: 0.8rem; font-weight: 400; letter-spacing: 0.04em;
+    padding: 7px 16px; border-radius: 100px;
+    background: var(--green-pale); color: var(--green-deep);
+    border: 1px solid rgba(43, 106, 79, 0.15);
+  }
+
+  .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--green-deep); color: var(--white);
+    padding: 16px 32px; border-radius: 100px;
+    font-size: 0.9rem; font-weight: 500;
+    text-decoration: none; transition: all 0.25s;
+    box-shadow: 0 4px 20px rgba(27, 77, 53, 0.25);
+  }
+  .btn-primary:hover {
+    background: var(--green-mid);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(27, 77, 53, 0.3);
+  }
+
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: transparent; color: var(--green-deep);
+    padding: 16px 32px; border-radius: 100px;
+    border: 1.5px solid var(--green-deep);
+    font-size: 0.9rem; font-weight: 500;
+    text-decoration: none; transition: all 0.25s;
+  }
+  .btn-secondary:hover {
+    background: var(--green-deep); color: var(--white);
+    transform: translateY(-2px);
+  }
+
+  .hero-image {
+    position: relative; z-index: 2;
+    display: flex; justify-content: center; align-items: center;
+  }
+
+  .hero-photo-frame {
+    position: relative; width: 460px; height: 560px;
+  }
+
+  .hero-photo-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(145deg, var(--green-pale) 0%, var(--terra-pale) 100%);
+    border-radius: 60% 40% 55% 45% / 50% 55% 45% 50%;
+    animation: morphBlob 8s ease-in-out infinite;
+  }
+
+  @keyframes morphBlob {
+    0%, 100% { border-radius: 60% 40% 55% 45% / 50% 55% 45% 50%; }
+    33% { border-radius: 50% 50% 40% 60% / 55% 45% 55% 45%; }
+    66% { border-radius: 45% 55% 60% 40% / 45% 60% 40% 55%; }
+  }
+
+  .hero-photo-placeholder {
+    position: absolute; inset: 20px;
+    border-radius: 60% 40% 55% 45% / 50% 55% 45% 50%;
+    background: linear-gradient(160deg, #c8e6c9 0%, #a5d6a7 40%, #81c784 100%);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 12px;
+    animation: morphBlob 8s ease-in-out infinite;
+    overflow: hidden;
+  }
+
+  .photo-icon { font-size: 4rem; opacity: 0.6; }
+  .photo-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem; color: var(--green-deep);
+    opacity: 0.8; font-style: italic; text-align: center; padding: 0 20px;
+  }
+
+  .hero-quote {
+    position: absolute; bottom: -20px; left: -40px;
+    background: var(--white); border-radius: 20px;
+    padding: 20px 24px; max-width: 260px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+  }
+  .hero-quote p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem; font-style: italic; line-height: 1.5;
+    color: var(--green-deep);
+  }
+  .hero-quote cite {
+    display: block; margin-top: 8px;
+    font-size: 0.75rem; font-style: normal; color: var(--text-light);
+    font-weight: 500; letter-spacing: 0.04em;
+  }
+
+  .hero-stat {
+    position: absolute; top: 20px; right: -20px;
+    background: var(--green-deep); color: var(--white);
+    border-radius: 16px; padding: 16px 20px; text-align: center;
+  }
+  .hero-stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem; font-weight: 400; line-height: 1;
+  }
+  .hero-stat-label { font-size: 0.68rem; opacity: 0.8; margin-top: 4px; letter-spacing: 0.05em; }
+
+  /* ─── SECTION BASE ─── */
+  section { padding: 100px 80px; }
+
+  .section-tag {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 0.75rem; font-weight: 500; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--sage);
+    margin-bottom: 20px;
+  }
+  .section-tag::before { content: ''; display: block; width: 28px; height: 1px; background: var(--sage); }
+
+  .section-title {
+    font-size: clamp(2.2rem, 4vw, 3.4rem);
+    font-weight: 300; color: var(--green-deep);
+    line-height: 1.15; margin-bottom: 20px;
+  }
+  .section-title em { font-style: italic; color: var(--terra); }
+
+  .section-lead {
+    font-size: 1.05rem; line-height: 1.8;
+    color: var(--text-light); max-width: 520px;
+  }
+
+  /* ─── PARA QUIEN ─── */
+  #para-quien {
+    background: var(--green-deep);
+    color: var(--white);
+  }
+
+  #para-quien .section-tag { color: var(--sage); }
+  #para-quien .section-tag::before { background: var(--sage); }
+  #para-quien .section-title { color: var(--white); }
+  #para-quien .section-title em { color: var(--green-soft); }
+  #para-quien .section-lead { color: rgba(255,255,255,0.7); }
+
+  .cards-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 24px; margin-top: 60px;
+  }
+
+  .card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 24px; padding: 36px 32px;
+    transition: all 0.3s;
+    cursor: default;
+  }
+  .card:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-4px);
+    border-color: rgba(255,255,255,0.2);
+  }
+
+  .card-icon { font-size: 2rem; margin-bottom: 20px; }
+  .card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem; font-weight: 400; color: var(--white);
+    margin-bottom: 12px;
+  }
+  .card-desc { font-size: 0.9rem; line-height: 1.7; color: rgba(255,255,255,0.65); }
+
+  /* ─── SERVICIOS ─── */
+  #servicios { background: var(--white); }
+
+  .servicios-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 2px; margin-top: 60px;
+    border-radius: 28px; overflow: hidden;
+    box-shadow: 0 4px 40px rgba(0,0,0,0.06);
+  }
+
+  .servicio {
+    background: var(--cream); padding: 48px 44px;
+    transition: background 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .servicio:hover { background: var(--green-pale); }
+
+  .servicio-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 5rem; font-weight: 300;
+    color: var(--green-pale); line-height: 1;
+    position: absolute; top: 20px; right: 30px;
+    transition: color 0.3s;
+  }
+  .servicio:hover .servicio-num { color: rgba(43,106,79,0.15); }
+
+  .servicio-icon { font-size: 1.8rem; margin-bottom: 20px; }
+  .servicio-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.7rem; font-weight: 400; color: var(--green-deep);
+    margin-bottom: 14px;
+  }
+  .servicio-desc { font-size: 0.9rem; line-height: 1.75; color: var(--text-light); margin-bottom: 20px; }
+
+  .servicio-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .servicio-tag {
+    font-size: 0.75rem; padding: 5px 14px; border-radius: 100px;
+    background: rgba(27,77,53,0.08); color: var(--green-mid);
+    font-weight: 500;
+  }
+
+  /* ─── COMO FUNCIONA ─── */
+  #como-funciona {
+    background: var(--cream-dark);
+    display: flex; gap: 80px; align-items: center;
+  }
+
+  .como-text { flex: 1; }
+  .como-steps { flex: 1; display: flex; flex-direction: column; gap: 0; }
+
+  .step-item {
+    display: flex; gap: 28px; align-items: flex-start;
+    padding: 32px 0; border-bottom: 1px solid rgba(43,106,79,0.1);
+    transition: all 0.3s;
+    cursor: default;
+  }
+  .step-item:last-child { border-bottom: none; }
+  .step-item:hover .step-num { background: var(--green-deep); color: var(--white); }
+
+  .step-num {
+    flex-shrink: 0; width: 48px; height: 48px;
+    border-radius: 50%; border: 1.5px solid var(--green-deep);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem; color: var(--green-deep);
+    transition: all 0.3s;
+  }
+
+  .step-content {}
+  .step-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.35rem; color: var(--green-deep);
+    margin-bottom: 6px;
+  }
+  .step-desc { font-size: 0.88rem; line-height: 1.7; color: var(--text-light); }
+
+  /* ─── SOBRE LETICIA ─── */
+  #sobre-mi {
+    background: var(--white);
+    display: flex; gap: 100px; align-items: center;
+  }
+
+  .sobre-image-col { flex-shrink: 0; width: 380px; }
+  .sobre-photo-frame {
+    width: 340px; height: 400px; position: relative;
+  }
+  .sobre-photo-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--green-pale), var(--terra-pale));
+    border-radius: 40% 60% 50% 50% / 50% 40% 60% 50%;
+    animation: morphBlob2 10s ease-in-out infinite;
+  }
+  @keyframes morphBlob2 {
+    0%, 100% { border-radius: 40% 60% 50% 50% / 50% 40% 60% 50%; }
+    50% { border-radius: 60% 40% 45% 55% / 45% 60% 40% 55%; }
+  }
+  .sobre-photo-inner {
+    position: absolute; inset: 16px;
+    background: linear-gradient(160deg, #b2dfdb 0%, #80cbc4 100%);
+    border-radius: 40% 60% 50% 50% / 50% 40% 60% 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3rem; color: var(--green-deep);
+    animation: morphBlob2 10s ease-in-out infinite;
+  }
+
+  .sobre-badge {
+    position: absolute; bottom: 20px; right: -30px;
+    background: var(--terra); color: var(--white);
+    border-radius: 16px; padding: 14px 20px;
+    font-size: 0.78rem; font-weight: 500; line-height: 1.4;
+  }
+
+  .sobre-text-col { flex: 1; }
+  .sobre-bio {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem; font-weight: 300; font-style: italic;
+    line-height: 1.6; color: var(--green-deep);
+    margin-bottom: 24px; margin-top: 32px;
+  }
+  .sobre-desc { font-size: 0.95rem; line-height: 1.8; color: var(--text-light); margin-bottom: 32px; }
+
+  .sobre-pills { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
+  .pill {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.82rem; font-weight: 500;
+    padding: 8px 18px; border-radius: 100px;
+    background: var(--cream); color: var(--green-deep);
+    border: 1px solid rgba(43,106,79,0.15);
+  }
+  .pill-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--terra); }
+
+  /* ─── QUOTE SECTION ─── */
+  #quote-section {
+    background: var(--cream-dark);
+    text-align: center; padding: 100px 200px;
+  }
+
+  .big-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 300; font-style: italic;
+    color: var(--green-deep); line-height: 1.4;
+    max-width: 900px; margin: 0 auto 28px;
+  }
+  .big-quote em { color: var(--terra); font-style: normal; }
+
+  .quote-attr {
+    font-size: 0.82rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--sage);
+  }
+
+  /* ─── LOCALIZACIÓN ─── */
+  #ubicacion {
+    background: var(--green-deep); color: var(--white);
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+  }
+
+  #ubicacion .section-tag { color: var(--sage); }
+  #ubicacion .section-tag::before { background: var(--sage); }
+  #ubicacion .section-title { color: var(--white); }
+  #ubicacion .section-title em { color: var(--green-soft); }
+  #ubicacion .section-lead { color: rgba(255,255,255,0.65); }
+
+  .ubicacion-cards { display: flex; flex-direction: column; gap: 16px; margin-top: 40px; }
+  .ubicacion-card {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 20px; padding: 28px 32px;
+    display: flex; align-items: center; gap: 20px;
+    transition: all 0.3s;
+  }
+  .ubicacion-card:hover { background: rgba(255,255,255,0.12); transform: translateX(6px); }
+
+  .ubicacion-icon {
+    width: 50px; height: 50px; flex-shrink: 0;
+    background: rgba(255,255,255,0.1); border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+  }
+  .ubicacion-info {}
+  .ubicacion-title { font-size: 0.8rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sage); margin-bottom: 4px; }
+  .ubicacion-place { font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; color: var(--white); }
+
+  .ubicacion-visual {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 28px; padding: 48px;
+    text-align: center;
+  }
+  .ubicacion-visual-emoji { font-size: 4rem; margin-bottom: 20px; }
+  .ubicacion-visual h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem; color: var(--white); margin-bottom: 10px;
+  }
+  .ubicacion-visual p { font-size: 0.9rem; color: rgba(255,255,255,0.6); line-height: 1.7; }
+
+  /* ─── CONTACTO ─── */
+  #contacto {
+    background: var(--cream); text-align: center;
+    padding: 120px 80px;
+  }
+
+  .contacto-inner { max-width: 680px; margin: 0 auto; }
+
+  .contacto-title {
+    font-size: clamp(2.8rem, 5vw, 4.5rem);
+    font-weight: 300; color: var(--green-deep); line-height: 1.1;
+    margin-bottom: 24px; margin-top: 20px;
+  }
+  .contacto-title em { font-style: italic; color: var(--terra); }
+
+  .contacto-desc {
+    font-size: 1.05rem; line-height: 1.8;
+    color: var(--text-light); margin-bottom: 48px;
+  }
+
+  .contacto-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 56px; }
+
+  .btn-wa {
+    display: inline-flex; align-items: center; gap: 12px;
+    background: #25D366; color: var(--white);
+    padding: 18px 36px; border-radius: 100px;
+    font-size: 0.95rem; font-weight: 500;
+    text-decoration: none; transition: all 0.25s;
+    box-shadow: 0 4px 20px rgba(37,211,102,0.3);
+  }
+  .btn-wa:hover {
+    background: #1db954; transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(37,211,102,0.4);
+  }
+
+  .btn-ig {
+    display: inline-flex; align-items: center; gap: 12px;
+    background: linear-gradient(135deg, #f09433, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888);
+    color: var(--white); padding: 18px 36px; border-radius: 100px;
+    font-size: 0.95rem; font-weight: 500;
+    text-decoration: none; transition: all 0.25s;
+    box-shadow: 0 4px 20px rgba(220,39,67,0.25);
+  }
+  .btn-ig:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(220,39,67,0.35); }
+
+  .contacto-divider {
+    display: flex; align-items: center; gap: 20px;
+    margin: 40px 0; color: var(--sage);
+    font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .contacto-divider::before, .contacto-divider::after {
+    content: ''; flex: 1; height: 1px; background: var(--cream-dark);
+  }
+
+  .contacto-info-row {
+    display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;
+  }
+  .contacto-info-item {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 0.88rem; color: var(--text-light);
+  }
+  .contacto-info-item strong { color: var(--green-deep); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--green-deep); color: rgba(255,255,255,0.6);
+    padding: 40px 80px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 0.82rem;
+  }
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem; color: var(--white); font-weight: 400;
+  }
+  .footer-logo span { color: var(--green-soft); }
+  .footer-ig a {
+    color: var(--green-soft); text-decoration: none;
+    font-weight: 500; transition: color 0.2s;
+  }
+  .footer-ig a:hover { color: var(--white); }
+
+  /* ─── ANIMATIONS ─── */
+  .fade-in {
+    opacity: 0; transform: translateY(30px);
+    animation: fadeInUp 0.8s ease forwards;
+  }
+  .fade-in-delay-1 { animation-delay: 0.15s; }
+  .fade-in-delay-2 { animation-delay: 0.3s; }
+  .fade-in-delay-3 { animation-delay: 0.45s; }
+  .fade-in-delay-4 { animation-delay: 0.6s; }
+
+  @keyframes fadeInUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 1024px) {
+    nav { padding: 16px 32px; }
+    .nav-links { display: none; }
+    #hero { grid-template-columns: 1fr; padding: 120px 40px 60px; text-align: center; }
+    .hero-text { padding-right: 0; }
+    .hero-desc { max-width: 100%; }
+    .hero-tags { justify-content: center; }
+    .hero-ctas { justify-content: center; }
+    .hero-image { display: none; }
+    section { padding: 80px 40px; }
+    .cards-grid { grid-template-columns: 1fr; }
+    .servicios-grid { grid-template-columns: 1fr; }
+    #como-funciona { flex-direction: column; gap: 48px; }
+    #sobre-mi { flex-direction: column; gap: 48px; }
+    .sobre-image-col { width: 100%; display: flex; justify-content: center; }
+    #quote-section { padding: 80px 40px; }
+    #ubicacion { grid-template-columns: 1fr; gap: 48px; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+    .contacto-info-row { gap: 20px; }
+  }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--cream); }
+  ::-webkit-scrollbar-thumb { background: var(--sage); border-radius: 10px; }
 </style>
 </head>
 <body>
-  <!-- Navegación -->
-  <nav>
-    <div class="nav-logo">Espacio <span>Leti</span></div>
-    <ul class="nav-links">
-      <li><a href="#inicio">Inicio</a></li>
-      <li><a href="#servicios">Servicios</a></li>
-      <li><a href="#contacto">Contacto</a></li>
-    </ul>
-    <a href="#contacto" class="nav-cta">Agendar Cita</a>
-  </nav>
 
-  <!-- Sección Hero -->
-  <section id="inicio" style="padding: 200px 48px 100px; text-align: center; background: var(--cream);">
-    <h1 class="display" style="font-size: 3rem; color: var(--green-deep); margin-bottom: 20px;">Lic. Leticia Maurente</h1>
-    <p style="font-size: 1.2rem; color: var(--text-light); max-width: 600px; margin: 0 auto;">Psicóloga especializada en terapia individual y de pareja. Ayudo a personas a superar desafíos emocionales y construir una vida más plena.</p>
-    <a href="#contacto" style="display: inline-block; margin-top: 30px; background: var(--green-deep); color: var(--white); padding: 15px 30px; border-radius: 100px; text-decoration: none;">Conóceme</a>
-  </section>
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Espacio <span>Leti</span></div>
+  <ul class="nav-links">
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#sobre-mi">Sobre mí</a></li>
+    <li><a href="#ubicacion">Dónde atiendo</a></li>
+    <li><a href="#contacto" class="nav-cta">Agendar consulta</a></li>
+  </ul>
+</nav>
 
-  <!-- Sección Servicios -->
-  <section id="servicios" style="padding: 100px 48px; background: var(--white);">
-    <h2 style="text-align: center; margin-bottom: 50px;">Servicios</h2>
-    <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
-      <div style="max-width: 300px; text-align: center; margin: 20px;">
-        <h3>Terapia Individual</h3>
-        <p>Sesiones personalizadas para abordar temas como ansiedad, depresión, autoestima y crecimiento personal.</p>
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-blob blob-1"></div>
+  <div class="hero-blob blob-2"></div>
+
+  <div class="hero-text">
+    <div class="hero-eyebrow fade-in">Psicóloga Clínica · Jóvenes y Adultos</div>
+
+    <h1 class="hero-title fade-in fade-in-delay-1">
+      Un espacio<br>para <em>volver a vos</em>
+    </h1>
+
+    <p class="hero-subtitle fade-in fade-in-delay-2">
+      Lic. Leticia Maurente Sosa
+    </p>
+
+    <p class="hero-desc fade-in fade-in-delay-2">
+      Acompaño procesos de ansiedad, vínculos y emociones desde un espacio de escucha real, 
+      sin juicios y con compromiso genuino. Porque sanar no es llegar a la felicidad constante — 
+      es poder respirar sin que duela.
+    </p>
+
+    <div class="hero-tags fade-in fade-in-delay-3">
+      <span class="tag">Ansiedad</span>
+      <span class="tag">Vínculos</span>
+      <span class="tag">Procesos emocionales</span>
+      <span class="tag">Virtual</span>
+      <span class="tag">Presencial</span>
+    </div>
+
+    <div class="hero-ctas fade-in fade-in-delay-4">
+      <a href="https://wa.me/59891085875" target="_blank" class="btn-primary">
+        💬 Escribirme por WhatsApp
+      </a>
+      <a href="#servicios" class="btn-secondary">
+        Ver servicios →
+      </a>
+    </div>
+  </div>
+
+  <div class="hero-image fade-in fade-in-delay-2">
+    <div class="hero-photo-frame">
+      <div class="hero-photo-bg"></div>
+      <div class="hero-photo-placeholder">
+        <div class="photo-icon">🌿</div>
+        <p class="photo-label">Lic. Leticia Maurente</p>
       </div>
-      <div style="max-width: 300px; text-align: center; margin: 20px;">
-        <h3>Terapia de Pareja</h3>
-        <p>Ayuda para mejorar la comunicación, resolver conflictos y fortalecer la relación de pareja.</p>
+
+      <div class="hero-quote">
+        <p>"A veces no se trata de estar feliz, sino de poder respirar sin que duela."</p>
+        <cite>— Leticia Maurente</cite>
       </div>
-      <div style="max-width: 300px; text-align: center; margin: 20px;">
-        <h3>Orientación Profesional</h3>
-        <p>Asesoramiento para decisiones de carrera, manejo del estrés laboral y desarrollo profesional.</p>
+
+      <div class="hero-stat">
+        <div class="hero-stat-num">+173</div>
+        <div class="hero-stat-label">publicaciones<br>compartidas</div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- Sección Contacto -->
-  <section id="contacto" style="padding: 100px 48px; background: var(--cream); text-align: center;">
-    <h2>Contacto</h2>
-    <p style="margin: 20px 0;">¿Listo para dar el primer paso? Agenda tu consulta inicial.</p>
-    <p>Email: leticia.maurente@ejemplo.com</p>
-    <p>Teléfono: +54 123 456 7890</p>
-    <p>Dirección: [Tu dirección aquí]</p>
-    <a href="mailto:leticia.maurente@ejemplo.com" style="display: inline-block; margin-top: 30px; background: var(--green-deep); color: var(--white); padding: 15px 30px; border-radius: 100px; text-decoration: none;">Enviar Email</a>
-  </section>
+<!-- PARA QUIEN -->
+<section id="para-quien">
+  <div class="section-tag">¿Es para ti?</div>
+  <h2 class="section-title">Este espacio es para quienes<br>sienten que <em>algo no está bien</em></h2>
+  <p class="section-lead">No hace falta estar en el piso para pedir ayuda. Hace falta que decidas que merecés estar mejor.</p>
+
+  <div class="cards-grid">
+    <div class="card">
+      <div class="card-icon">😮‍💨</div>
+      <h3 class="card-title">La cabeza no para</h3>
+      <p class="card-desc">Sentís que tu mente siempre está corriendo, pensando en el próximo problema, sin poder descansar de verdad. El cuerpo dice que pares pero vos seguís.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">💔</div>
+      <h3 class="card-title">Los vínculos duelen</h3>
+      <p class="card-desc">En tus relaciones hay algo que se repite y no entendés por qué. Ponés límites y generan conflicto. O tenés miedo de que si sos vos de verdad, el otro se vaya.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🌫️</div>
+      <h3 class="card-title">Todo cuesta más de lo normal</h3>
+      <p class="card-desc">Salir, responder mensajes, estar presente. Hay etapas en que lo más simple se vuelve pesado y desde afuera no se nota todo lo que estás sosteniendo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICIOS -->
+<section id="servicios">
+  <div class="section-tag">Lo que ofrezco</div>
+  <h2 class="section-title">Un acompañamiento<br>a tu <em>medida</em></h2>
+
+  <div class="servicios-grid">
+    <div class="servicio">
+      <div class="servicio-num">01</div>
+      <div class="servicio-icon">🌿</div>
+      <h3 class="servicio-title">Consulta Individual</h3>
+      <p class="servicio-desc">Sesiones de 50 minutos de acompañamiento psicológico individual. Trabajamos en profundidad lo que te pasa — sin apuro, con escucha real y herramientas concretas.</p>
+      <div class="servicio-tags">
+        <span class="servicio-tag">Ansiedad</span>
+        <span class="servicio-tag">Autoestima</span>
+        <span class="servicio-tag">Duelo</span>
+        <span class="servicio-tag">Procesos emocionales</span>
+      </div>
+    </div>
+    <div class="servicio">
+      <div class="servicio-num">02</div>
+      <div class="servicio-icon">💻</div>
+      <h3 class="servicio-title">Atención Virtual</h3>
+      <p class="servicio-desc">Las mismas sesiones, desde donde estés. La terapia online es igual de efectiva y te da la flexibilidad de hacerlo desde tu espacio. Para todo Uruguay y el exterior.</p>
+      <div class="servicio-tags">
+        <span class="servicio-tag">Todo Uruguay</span>
+        <span class="servicio-tag">Flexible</span>
+        <span class="servicio-tag">Privado</span>
+      </div>
+    </div>
+    <div class="servicio">
+      <div class="servicio-num">03</div>
+      <div class="servicio-icon">📚</div>
+      <h3 class="servicio-title">Tutoría de TFG</h3>
+      <p class="servicio-desc">Acompañamiento metodológico y de escritura para trabajos finales de grado en Psicología y áreas afines. Orientación personalizada en cada etapa del proceso.</p>
+      <div class="servicio-tags">
+        <span class="servicio-tag">Metodología</span>
+        <span class="servicio-tag">Redacción</span>
+        <span class="servicio-tag">Online</span>
+      </div>
+    </div>
+    <div class="servicio">
+      <div class="servicio-num">04</div>
+      <div class="servicio-icon">🎙️</div>
+      <h3 class="servicio-title">Charlas y Talleres</h3>
+      <p class="servicio-desc">Charlas sobre salud mental para grupos, instituciones o empresas. Temas como manejo del estrés, vínculos saludables, inteligencia emocional y bienestar.</p>
+      <div class="servicio-tags">
+        <span class="servicio-tag">Grupos</span>
+        <span class="servicio-tag">Empresas</span>
+        <span class="servicio-tag">A medida</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section id="como-funciona">
+  <div class="como-text">
+    <div class="section-tag">El proceso</div>
+    <h2 class="section-title">Empezar<br>es más simple<br>de lo que <em>parece</em></h2>
+    <p class="section-lead">El primer mensaje siempre es el más difícil. Pero también puede ser el que cambie muchas cosas.</p>
+  </div>
+
+  <div class="como-steps">
+    <div class="step-item">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h3 class="step-title">Me escribís</h3>
+        <p class="step-desc">Por WhatsApp o Instagram. Me contás brevemente qué te trae y acordamos un primer turno para conocernos.</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h3 class="step-title">Primera sesión</h3>
+        <p class="step-desc">Nos conocemos, hablás de lo que te está pasando y vemos juntes si el espacio se adapta a lo que estás buscando.</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h3 class="step-title">Construimos el proceso</h3>
+        <p class="step-desc">Con frecuencia semanal y compromiso real. Los cambios profundos no se logran en pocas sesiones — pero sí paso a paso.</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h3 class="step-title">Transformación real</h3>
+        <p class="step-desc">Cuando llegue fin de año, no vas a ser la misma persona. Vas a tener otra forma de estar, pensar y resolver lo que antes te desbordaba.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOBRE LETICIA -->
+<section id="sobre-mi">
+  <div class="sobre-image-col">
+    <div class="sobre-photo-frame">
+      <div class="sobre-photo-bg"></div>
+      <div class="sobre-photo-inner">🌿</div>
+      <div class="sobre-badge">
+        📍 La Paloma · Rocha<br>💻 Virtual · Uruguay
+      </div>
+    </div>
+  </div>
+
+  <div class="sobre-text-col">
+    <div class="section-tag">Sobre mí</div>
+    <h2 class="section-title">Hola, soy <em>Leticia</em></h2>
+
+    <p class="sobre-bio">
+      "Creo que pedir ayuda no habla de debilidad. Habla de que elegiste prestarte atención."
+    </p>
+
+    <p class="sobre-desc">
+      Soy Licenciada en Psicología y trabajo acompañando jóvenes y adultos en sus procesos 
+      emocionales desde un espacio de escucha genuina, sin juicios y con herramientas concretas.
+      Me especializo en ansiedad, vínculos y procesos emocionales complejos.
+    </p>
+    <p class="sobre-desc">
+      Además de la consulta clínica, realizo tutoría de trabajos finales de grado y participé 
+      como especialista en salud mental en medios de comunicación.
+    </p>
+
+    <div class="sobre-pills">
+      <div class="pill"><div class="pill-dot"></div> Psicóloga Clínica</div>
+      <div class="pill"><div class="pill-dot"></div> Jóvenes y Adultos</div>
+      <div class="pill"><div class="pill-dot"></div> Tutora TFG</div>
+      <div class="pill"><div class="pill-dot"></div> Formación continua</div>
+      <div class="pill"><div class="pill-dot"></div> Radio y medios</div>
+    </div>
+
+    <a href="https://wa.me/59891085875" target="_blank" class="btn-primary">
+      💬 Hablar con Leticia
+    </a>
+  </div>
+</section>
+
+<!-- QUOTE -->
+<section id="quote-section">
+  <p class="big-quote">
+    "A veces no se trata de estar <em>feliz</em>.<br>
+    Se trata de poder respirar sin que duela,<br>
+    de habitar el presente sin que pese."
+  </p>
+  <p class="quote-attr">— Leticia Maurente · @psico.espacioleti</p>
+</section>
+
+<!-- UBICACION -->
+<section id="ubicacion">
+  <div>
+    <div class="section-tag">Dónde atiendo</div>
+    <h2 class="section-title">Presencial o<br><em>virtual</em>, como prefiera</h2>
+    <p class="section-lead">Tengo consultorios en La Paloma y en Rocha. También atendo de forma virtual para todo Uruguay y el exterior.</p>
+
+    <div class="ubicacion-cards">
+      <div class="ubicacion-card">
+        <div class="ubicacion-icon">📍</div>
+        <div class="ubicacion-info">
+          <div class="ubicacion-title">Consultorio 1</div>
+          <div class="ubicacion-place">La Paloma, Rocha</div>
+        </div>
+      </div>
+      <div class="ubicacion-card">
+        <div class="ubicacion-icon">📍</div>
+        <div class="ubicacion-info">
+          <div class="ubicacion-title">Consultorio 2</div>
+          <div class="ubicacion-place">Ciudad de Rocha</div>
+        </div>
+      </div>
+      <div class="ubicacion-card">
+        <div class="ubicacion-icon">💻</div>
+        <div class="ubicacion-info">
+          <div class="ubicacion-title">Atención online</div>
+          <div class="ubicacion-place">Todo Uruguay · Exterior</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ubicacion-visual">
+    <div class="ubicacion-visual-emoji">🌊</div>
+    <h3>Costa de Rocha</h3>
+    <p>Un espacio en una de las zonas más hermosas de Uruguay. Presencial cuando podés, virtual cuando lo necesitás.</p>
+    <br>
+    <a href="https://wa.me/59891085875" target="_blank" class="btn-secondary" style="color:white; border-color:rgba(255,255,255,0.4); display:inline-flex; gap:10px; align-items:center;">
+      📅 Consultar disponibilidad
+    </a>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <div class="contacto-inner">
+    <div class="section-tag" style="justify-content:center;">Empezar</div>
+    <h2 class="contacto-title">¿Es tu <em>momento</em>?</h2>
+    <p class="contacto-desc">
+      El primer mensaje siempre es el más difícil de mandar. Pero la mayoría llega pensando que su problema "no es tan grave"... y no hay que merecerse ayuda. Solo querés estar mejor. Y eso es suficiente.
+    </p>
+
+    <div class="contacto-btns">
+      <a href="https://wa.me/59891085875" target="_blank" class="btn-wa">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Escribirme por WhatsApp
+      </a>
+      <a href="https://instagram.com/psico.espacioleti" target="_blank" class="btn-ig">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        Seguirme en Instagram
+      </a>
+    </div>
+
+    <div class="contacto-divider">o contactá directamente</div>
+
+    <div class="contacto-info-row">
+      <div class="contacto-info-item">
+        📱 <span>WhatsApp: <strong>091 085 875</strong></span>
+      </div>
+      <div class="contacto-info-item">
+        📍 <span>La Paloma y <strong>Rocha, UY</strong></span>
+      </div>
+      <div class="contacto-info-item">
+        💻 <span>Atención <strong>virtual</strong> disponible</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Espacio <span>Leti</span> · Lic. Leticia Maurente</div>
+  <div>Psicóloga Clínica · Rocha y La Paloma, Uruguay</div>
+  <div class="footer-ig">
+    <a href="https://instagram.com/psico.espacioleti" target="_blank">@psico.espacioleti</a>
+  </div>
+</footer>
+
+<script>
+  // Intersection Observer for scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(el => {
+      if (el.isIntersecting) {
+        el.target.style.opacity = '1';
+        el.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.card, .servicio, .step-item, .ubicacion-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(24px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+
+  // Stagger cards
+  document.querySelectorAll('.cards-grid .card').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.12}s`;
+  });
+  document.querySelectorAll('.servicios-grid .servicio').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.1}s`;
+  });
+</script>
+
 </body>
 </html>
