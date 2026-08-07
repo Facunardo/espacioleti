@@ -23,17 +23,56 @@
     --text: #2C2C2C;
     --text-light: #6B6B6B;
     --white: #FDFAF6;
+    --shadow-soft: 0 4px 40px rgba(27,77,53,0.07);
+    --shadow-lift: 0 20px 60px rgba(27,77,53,0.16);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; scroll-padding-top: 90px; }
 
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--cream);
     color: var(--text);
     overflow-x: hidden;
+    position: relative;
+  }
+
+  h1, h2, h3 { text-wrap: balance; }
+
+  ::selection { background: var(--green-deep); color: var(--white); }
+
+  :focus-visible {
+    outline: 2px solid var(--terra);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* ─── GRAIN OVERLAY ─── */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    z-index: 998; pointer-events: none;
+    opacity: 0.045; mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ─── SCROLL PROGRESS ─── */
+  #scroll-progress {
+    position: fixed; top: 0; left: 0; height: 3px;
+    background: linear-gradient(90deg, var(--terra), var(--green-soft));
+    z-index: 200; width: 0%;
+    transition: width 0.08s linear;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 
   /* ─── TYPOGRAPHY ─── */
@@ -82,12 +121,27 @@
     background: var(--cream);
   }
 
+  #hero::before {
+    content: '';
+    position: absolute; inset: -20%;
+    background: radial-gradient(500px circle at var(--mx, 70%) var(--my, 30%), rgba(82,183,136,0.16), transparent 60%);
+    pointer-events: none;
+    transition: background-position 0.3s ease;
+    z-index: 0;
+  }
+
   .hero-blob {
     position: absolute; border-radius: 50%;
-    filter: blur(80px); opacity: 0.3; pointer-events: none;
+    filter: blur(80px); opacity: 0.35; pointer-events: none;
+    animation: driftBlob 18s ease-in-out infinite;
   }
   .blob-1 { width: 600px; height: 600px; background: var(--green-pale); top: -100px; right: 0; }
-  .blob-2 { width: 400px; height: 400px; background: var(--terra-pale); bottom: -50px; left: 100px; }
+  .blob-2 { width: 400px; height: 400px; background: var(--terra-pale); bottom: -50px; left: 100px; animation-duration: 22s; animation-delay: -6s; }
+
+  @keyframes driftBlob {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-40px, 30px) scale(1.08); }
+  }
 
   .hero-text { position: relative; z-index: 2; padding-right: 60px; }
 
@@ -166,43 +220,56 @@
 
   .hero-photo-frame {
     position: relative; width: 460px; height: 560px;
+    display: flex; align-items: center; justify-content: center;
   }
 
-  .hero-photo-bg {
-    position: absolute; inset: 0;
-    background: linear-gradient(145deg, var(--green-pale) 0%, var(--terra-pale) 100%);
-    border-radius: 60% 40% 55% 45% / 50% 55% 45% 50%;
-    animation: morphBlob 8s ease-in-out infinite;
+  /* ─── SIGNATURE: BREATHING CIRCLE ───
+     Rings expand and contract on an 8s cycle (4s inhale / 4s exhale) —
+     a literal visualization of "poder respirar sin que duela". */
+  .breathing-rings {
+    position: relative; width: 340px; height: 340px;
+    display: flex; align-items: center; justify-content: center;
   }
-
-  @keyframes morphBlob {
-    0%, 100% { border-radius: 60% 40% 55% 45% / 50% 55% 45% 50%; }
-    33% { border-radius: 50% 50% 40% 60% / 55% 45% 55% 45%; }
-    66% { border-radius: 45% 55% 60% 40% / 45% 60% 40% 55%; }
+  .breath-ring {
+    position: absolute; border-radius: 50%;
+    border: 1px solid rgba(43,106,79,0.18);
+    animation: breathe 8s ease-in-out infinite;
   }
+  .breath-ring.r1 { width: 100%; height: 100%; animation-delay: 0s; }
+  .breath-ring.r2 { width: 78%; height: 78%; border-color: rgba(43,106,79,0.28); animation-delay: -0.4s; }
+  .breath-ring.r3 { width: 56%; height: 56%; border-color: rgba(43,106,79,0.4); animation-delay: -0.8s; }
 
-  .hero-photo-placeholder {
-    position: absolute; inset: 20px;
-    border-radius: 60% 40% 55% 45% / 50% 55% 45% 50%;
-    background: linear-gradient(160deg, #c8e6c9 0%, #a5d6a7 40%, #81c784 100%);
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center; gap: 12px;
-    animation: morphBlob 8s ease-in-out infinite;
-    overflow: hidden;
+  .breath-core {
+    position: relative; width: 210px; height: 210px; border-radius: 50%;
+    background: linear-gradient(155deg, #cdeccf 0%, #9fd6ab 45%, var(--green-soft) 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 10px; text-align: center;
+    box-shadow: 0 30px 70px rgba(27,77,53,0.25), inset 0 0 40px rgba(255,255,255,0.25);
+    animation: breatheCore 8s ease-in-out infinite;
   }
-
-  .photo-icon { font-size: 4rem; opacity: 0.6; }
-  .photo-label {
+  .breath-icon { font-size: 2.4rem; }
+  .breath-word {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1rem; color: var(--green-deep);
-    opacity: 0.8; font-style: italic; text-align: center; padding: 0 20px;
+    font-style: italic; font-size: 1.15rem;
+    color: var(--green-deep); letter-spacing: 0.02em;
+  }
+
+  @keyframes breathe {
+    0%, 100% { transform: scale(0.86); opacity: 0.5; }
+    50% { transform: scale(1); opacity: 1; }
+  }
+  @keyframes breatheCore {
+    0%, 100% { transform: scale(0.9); }
+    50% { transform: scale(1); }
   }
 
   .hero-quote {
-    position: absolute; bottom: -20px; left: -40px;
-    background: var(--white); border-radius: 20px;
+    position: absolute; bottom: -10px; left: -50px;
+    background: rgba(253,250,246,0.75); backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 20px;
     padding: 20px 24px; max-width: 260px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    box-shadow: var(--shadow-lift);
   }
   .hero-quote p {
     font-family: 'Cormorant Garamond', serif;
@@ -216,9 +283,10 @@
   }
 
   .hero-stat {
-    position: absolute; top: 20px; right: -20px;
+    position: absolute; top: 10px; right: -30px;
     background: var(--green-deep); color: var(--white);
     border-radius: 16px; padding: 16px 20px; text-align: center;
+    box-shadow: var(--shadow-lift);
   }
   .hero-stat-num {
     font-family: 'Cormorant Garamond', serif;
@@ -226,8 +294,29 @@
   }
   .hero-stat-label { font-size: 0.68rem; opacity: 0.8; margin-top: 4px; letter-spacing: 0.05em; }
 
+  /* ─── MARQUEE DIVIDER ─── */
+  .marquee-wrap {
+    background: var(--green-deep);
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 16px 0;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .marquee-track {
+    display: inline-flex; align-items: center; gap: 18px;
+    animation: marquee 28s linear infinite;
+    font-size: 0.9rem; font-weight: 500; letter-spacing: 0.06em;
+    text-transform: uppercase; color: rgba(255,255,255,0.85);
+  }
+  .marquee-track .dot { color: var(--green-soft); }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
   /* ─── SECTION BASE ─── */
-  section { padding: 100px 80px; }
+  section { padding: 84px 80px; }
 
   .section-tag {
     display: inline-flex; align-items: center; gap: 10px;
@@ -262,15 +351,16 @@
   #para-quien .section-lead { color: rgba(255,255,255,0.7); }
 
   .cards-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 24px; margin-top: 60px;
+    display: grid; grid-template-columns: 1.3fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 20px; margin-top: 60px;
   }
 
   .card {
     background: rgba(255,255,255,0.06);
     border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 24px; padding: 36px 32px;
-    transition: all 0.3s;
+    border-radius: 28px; padding: 36px 32px;
+    transition: all 0.35s;
     cursor: default;
   }
   .card:hover {
@@ -278,6 +368,14 @@
     transform: translateY(-4px);
     border-color: rgba(255,255,255,0.2);
   }
+
+  .card-featured {
+    grid-row: 1 / 3;
+    display: flex; flex-direction: column; justify-content: center;
+    background: linear-gradient(155deg, rgba(82,183,136,0.16), rgba(255,255,255,0.05));
+  }
+  .card-featured .card-icon { font-size: 2.8rem; }
+  .card-featured .card-title { font-size: 1.9rem; }
 
   .card-icon { font-size: 2rem; margin-bottom: 20px; }
   .card-title {
@@ -305,13 +403,15 @@
   .servicio:hover { background: var(--green-pale); }
 
   .servicio-num {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 5rem; font-weight: 300;
-    color: var(--green-pale); line-height: 1;
-    position: absolute; top: 20px; right: 30px;
-    transition: color 0.3s;
+    font-size: 0.68rem; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--green-mid);
+    position: absolute; top: 28px; right: 28px;
+    background: var(--green-pale);
+    padding: 6px 14px; border-radius: 100px;
+    transition: background 0.3s, color 0.3s;
   }
-  .servicio:hover .servicio-num { color: rgba(43,106,79,0.15); }
+  .servicio:hover .servicio-num { background: var(--terra-pale); color: var(--terra); }
 
   .servicio-icon { font-size: 1.8rem; margin-bottom: 20px; }
   .servicio-title {
@@ -335,20 +435,27 @@
   }
 
   .como-text { flex: 1; }
-  .como-steps { flex: 1; display: flex; flex-direction: column; gap: 0; }
+  .como-steps { flex: 1; display: flex; flex-direction: column; gap: 0; position: relative; }
+  .como-steps::before {
+    content: '';
+    position: absolute; left: 23px; top: 24px; bottom: 24px;
+    width: 1.5px;
+    background: linear-gradient(var(--green-deep), rgba(43,106,79,0.12));
+  }
 
   .step-item {
     display: flex; gap: 28px; align-items: flex-start;
-    padding: 32px 0; border-bottom: 1px solid rgba(43,106,79,0.1);
+    padding: 32px 0;
     transition: all 0.3s;
     cursor: default;
   }
-  .step-item:last-child { border-bottom: none; }
   .step-item:hover .step-num { background: var(--green-deep); color: var(--white); }
 
   .step-num {
+    position: relative; z-index: 1;
     flex-shrink: 0; width: 48px; height: 48px;
     border-radius: 50%; border: 1.5px solid var(--green-deep);
+    background: var(--cream-dark);
     display: flex; align-items: center; justify-content: center;
     font-family: 'Cormorant Garamond', serif;
     font-size: 1.3rem; color: var(--green-deep);
@@ -397,6 +504,7 @@
     background: var(--terra); color: var(--white);
     border-radius: 16px; padding: 14px 20px;
     font-size: 0.78rem; font-weight: 500; line-height: 1.4;
+    box-shadow: var(--shadow-lift);
   }
 
   .sobre-text-col { flex: 1; }
@@ -418,133 +526,122 @@
   }
   .pill-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--terra); }
 
-  /* ─── QUOTE SECTION ─── */
-  #quote-section {
-    background: var(--cream-dark);
-    text-align: center; padding: 100px 200px;
-  }
+  /* ─── WAVE DIVIDER ─── */
+  .wave-divider { line-height: 0; }
+  .wave-divider svg { width: 100%; height: 70px; display: block; }
+  .wave-divider path { fill: var(--green-deep); }
 
-  .big-quote {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2rem, 4vw, 3.2rem);
-    font-weight: 300; font-style: italic;
-    color: var(--green-deep); line-height: 1.4;
-    max-width: 900px; margin: 0 auto 28px;
-  }
-  .big-quote em { color: var(--terra); font-style: normal; }
-
-  .quote-attr {
-    font-size: 0.82rem; letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--sage);
-  }
-
-  /* ─── LOCALIZACIÓN ─── */
-  #ubicacion {
+  /* ─── CONECTAR: bento grid (instagram + ubicación + contacto) ─── */
+  #conectar.bento-dark {
     background: var(--green-deep); color: var(--white);
-    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+    position: relative; overflow: hidden;
+  }
+  #conectar .section-tag { color: var(--sage); }
+  #conectar .section-tag::before { background: var(--sage); }
+  #conectar .section-title { color: var(--white); max-width: 100%; }
+  #conectar .section-title em { color: var(--green-soft); }
+
+  .bento-grid {
+    max-width: 1080px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: minmax(120px, auto);
+    gap: 20px;
   }
 
-  #ubicacion .section-tag { color: var(--sage); }
-  #ubicacion .section-tag::before { background: var(--sage); }
-  #ubicacion .section-title { color: var(--white); }
-  #ubicacion .section-title em { color: var(--green-soft); }
-  #ubicacion .section-lead { color: rgba(255,255,255,0.65); }
-
-  .ubicacion-cards { display: flex; flex-direction: column; gap: 16px; margin-top: 40px; }
-  .ubicacion-card {
-    background: rgba(255,255,255,0.07);
+  .bento-cell {
+    background: rgba(255,255,255,0.06);
     border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 20px; padding: 28px 32px;
-    display: flex; align-items: center; gap: 20px;
+    border-radius: 28px; padding: 28px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.18);
     transition: all 0.3s;
   }
-  .ubicacion-card:hover { background: rgba(255,255,255,0.12); transform: translateX(6px); }
+  .bento-cell:hover { background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.22); }
 
-  .ubicacion-icon {
-    width: 50px; height: 50px; flex-shrink: 0;
-    background: rgba(255,255,255,0.1); border-radius: 14px;
+  .bento-cell-head {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 0.95rem; font-weight: 500; color: var(--white);
+    margin-bottom: 18px; gap: 10px; flex-wrap: wrap;
+  }
+
+  .bento-ig { grid-column: span 2; grid-row: span 2; }
+  .bento-wa {
+    grid-column: span 2;
+    background: linear-gradient(155deg, rgba(37,211,102,0.18), rgba(255,255,255,0.05));
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .bento-wa-text { font-size: 0.88rem; color: rgba(255,255,255,0.7); margin-bottom: 18px; line-height: 1.6; }
+  .bento-loc { grid-column: span 2; }
+  .bento-info {
+    grid-column: span 2;
+    display: flex; flex-direction: column; align-items: center; text-align: center; justify-content: center;
+    gap: 14px;
+  }
+
+  .bento-loc-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .bento-loc-list li {
+    font-size: 0.95rem; color: rgba(255,255,255,0.75);
+    padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .bento-loc-list li:last-child { border-bottom: none; padding-bottom: 0; }
+  .bento-loc-list strong { color: var(--white); font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 400; }
+
+  .bento-info-note { font-size: 0.82rem; color: rgba(255,255,255,0.55); }
+
+  .ig-live-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 0.7rem; font-weight: 500; letter-spacing: 0.05em;
+    color: var(--green-pale); background: rgba(255,255,255,0.08);
+    padding: 5px 14px; border-radius: 100px;
+  }
+  .ig-live-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green-soft);
+    animation: igPulse 2s infinite;
+  }
+  @keyframes igPulse {
+    0% { box-shadow: 0 0 0 0 rgba(82,183,136,0.5); }
+    70% { box-shadow: 0 0 0 8px rgba(82,183,136,0); }
+    100% { box-shadow: 0 0 0 0 rgba(82,183,136,0); }
+  }
+
+  .ig-embed-frame {
+    background: rgba(255,255,255,0.04);
+    border-radius: 20px;
+    min-height: 220px; height: calc(100% - 44px);
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.4rem;
+    overflow: hidden;
   }
-  .ubicacion-info {}
-  .ubicacion-title { font-size: 0.8rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sage); margin-bottom: 4px; }
-  .ubicacion-place { font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; color: var(--white); }
+  .ig-embed-frame iframe { width: 100%; height: 100%; border: none; border-radius: 16px; }
 
-  .ubicacion-visual {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 28px; padding: 48px;
-    text-align: center;
+  .ig-fallback {
+    color: rgba(255,255,255,0.55); font-size: 0.85rem; line-height: 1.7;
+    max-width: 280px; text-align: center; padding: 20px;
   }
-  .ubicacion-visual-emoji { font-size: 4rem; margin-bottom: 20px; }
-  .ubicacion-visual h3 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.8rem; color: var(--white); margin-bottom: 10px;
-  }
-  .ubicacion-visual p { font-size: 0.9rem; color: rgba(255,255,255,0.6); line-height: 1.7; }
-
-  /* ─── CONTACTO ─── */
-  #contacto {
-    background: var(--cream); text-align: center;
-    padding: 120px 80px;
-  }
-
-  .contacto-inner { max-width: 680px; margin: 0 auto; }
-
-  .contacto-title {
-    font-size: clamp(2.8rem, 5vw, 4.5rem);
-    font-weight: 300; color: var(--green-deep); line-height: 1.1;
-    margin-bottom: 24px; margin-top: 20px;
-  }
-  .contacto-title em { font-style: italic; color: var(--terra); }
-
-  .contacto-desc {
-    font-size: 1.05rem; line-height: 1.8;
-    color: var(--text-light); margin-bottom: 48px;
-  }
-
-  .contacto-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 56px; }
+  .ig-fallback a { color: var(--green-soft); font-weight: 500; }
 
   .btn-wa {
     display: inline-flex; align-items: center; gap: 12px;
     background: #25D366; color: var(--white);
-    padding: 18px 36px; border-radius: 100px;
-    font-size: 0.95rem; font-weight: 500;
+    padding: 16px 30px; border-radius: 100px;
+    font-size: 0.92rem; font-weight: 500;
     text-decoration: none; transition: all 0.25s;
-    box-shadow: 0 4px 20px rgba(37,211,102,0.3);
+    box-shadow: 0 8px 24px rgba(37,211,102,0.35);
+    width: fit-content;
   }
   .btn-wa:hover {
     background: #1db954; transform: translateY(-3px);
-    box-shadow: 0 8px 28px rgba(37,211,102,0.4);
+    box-shadow: 0 12px 32px rgba(37,211,102,0.45);
   }
 
   .btn-ig {
     display: inline-flex; align-items: center; gap: 12px;
     background: linear-gradient(135deg, #f09433, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888);
-    color: var(--white); padding: 18px 36px; border-radius: 100px;
-    font-size: 0.95rem; font-weight: 500;
+    color: var(--white); padding: 16px 30px; border-radius: 100px;
+    font-size: 0.92rem; font-weight: 500;
     text-decoration: none; transition: all 0.25s;
-    box-shadow: 0 4px 20px rgba(220,39,67,0.25);
+    box-shadow: 0 8px 24px rgba(220,39,67,0.3);
   }
-  .btn-ig:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(220,39,67,0.35); }
-
-  .contacto-divider {
-    display: flex; align-items: center; gap: 20px;
-    margin: 40px 0; color: var(--sage);
-    font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
-  }
-  .contacto-divider::before, .contacto-divider::after {
-    content: ''; flex: 1; height: 1px; background: var(--cream-dark);
-  }
-
-  .contacto-info-row {
-    display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;
-  }
-  .contacto-info-item {
-    display: flex; align-items: center; gap: 10px;
-    font-size: 0.88rem; color: var(--text-light);
-  }
-  .contacto-info-item strong { color: var(--green-deep); }
+  .btn-ig:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(220,39,67,0.4); }
 
   /* ─── FOOTER ─── */
   footer {
@@ -590,14 +687,15 @@
     .hero-image { display: none; }
     section { padding: 80px 40px; }
     .cards-grid { grid-template-columns: 1fr; }
+    .card-featured { grid-row: auto; }
     .servicios-grid { grid-template-columns: 1fr; }
     #como-funciona { flex-direction: column; gap: 48px; }
     #sobre-mi { flex-direction: column; gap: 48px; }
     .sobre-image-col { width: 100%; display: flex; justify-content: center; }
-    #quote-section { padding: 80px 40px; }
-    #ubicacion { grid-template-columns: 1fr; gap: 48px; }
+    .bento-grid { grid-template-columns: 1fr; }
+    .bento-ig, .bento-wa, .bento-loc, .bento-info { grid-column: span 1; grid-row: auto; }
+    .ig-embed-frame { min-height: 260px; }
     footer { flex-direction: column; gap: 16px; text-align: center; }
-    .contacto-info-row { gap: 20px; }
   }
 
   /* ─── SCROLLBAR ─── */
@@ -608,12 +706,15 @@
 </head>
 <body>
 
+<div id="scroll-progress"></div>
+
 <!-- NAV -->
 <nav>
   <div class="nav-logo">Espacio <span>Leti</span></div>
   <ul class="nav-links">
     <li><a href="#servicios">Servicios</a></li>
     <li><a href="#sobre-mi">Sobre mí</a></li>
+    <li><a href="#instagram">Instagram</a></li>
     <li><a href="#ubicacion">Dónde atiendo</a></li>
     <li><a href="#contacto" class="nav-cta">Agendar consulta</a></li>
   </ul>
@@ -636,18 +737,9 @@
     </p>
 
     <p class="hero-desc fade-in fade-in-delay-2">
-      Acompaño procesos de ansiedad, vínculos y emociones desde un espacio de escucha real, 
-      sin juicios y con compromiso genuino. Porque sanar no es llegar a la felicidad constante — 
-      es poder respirar sin que duela.
+      Acompaño procesos de ansiedad, vínculos y emociones desde la escucha real, sin juicios.
+      Sanar no es llegar a la felicidad constante — es poder respirar sin que duela.
     </p>
-
-    <div class="hero-tags fade-in fade-in-delay-3">
-      <span class="tag">Ansiedad</span>
-      <span class="tag">Vínculos</span>
-      <span class="tag">Procesos emocionales</span>
-      <span class="tag">Virtual</span>
-      <span class="tag">Presencial</span>
-    </div>
 
     <div class="hero-ctas fade-in fade-in-delay-4">
       <a href="https://wa.me/59891085875" target="_blank" class="btn-primary">
@@ -661,10 +753,14 @@
 
   <div class="hero-image fade-in fade-in-delay-2">
     <div class="hero-photo-frame">
-      <div class="hero-photo-bg"></div>
-      <div class="hero-photo-placeholder">
-        <div class="photo-icon">🌿</div>
-        <p class="photo-label">Lic. Leticia Maurente</p>
+      <div class="breathing-rings">
+        <div class="breath-ring r1"></div>
+        <div class="breath-ring r2"></div>
+        <div class="breath-ring r3"></div>
+        <div class="breath-core">
+          <div class="breath-icon">🌿</div>
+          <p class="breath-word" id="breath-word">Inhalá</p>
+        </div>
       </div>
 
       <div class="hero-quote">
@@ -680,6 +776,22 @@
   </div>
 </section>
 
+<!-- MARQUEE DIVIDER -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>Ansiedad</span><span class="dot">•</span>
+    <span>Vínculos</span><span class="dot">•</span>
+    <span>Procesos emocionales</span><span class="dot">•</span>
+    <span>Virtual</span><span class="dot">•</span>
+    <span>Presencial</span><span class="dot">•</span>
+    <span>Ansiedad</span><span class="dot">•</span>
+    <span>Vínculos</span><span class="dot">•</span>
+    <span>Procesos emocionales</span><span class="dot">•</span>
+    <span>Virtual</span><span class="dot">•</span>
+    <span>Presencial</span><span class="dot">•</span>
+  </div>
+</div>
+
 <!-- PARA QUIEN -->
 <section id="para-quien">
   <div class="section-tag">¿Es para ti?</div>
@@ -687,20 +799,20 @@
   <p class="section-lead">No hace falta estar en el piso para pedir ayuda. Hace falta que decidas que merecés estar mejor.</p>
 
   <div class="cards-grid">
-    <div class="card">
+    <div class="card card-featured">
       <div class="card-icon">😮‍💨</div>
       <h3 class="card-title">La cabeza no para</h3>
-      <p class="card-desc">Sentís que tu mente siempre está corriendo, pensando en el próximo problema, sin poder descansar de verdad. El cuerpo dice que pares pero vos seguís.</p>
+      <p class="card-desc">Tu mente corre sin parar, pensando en lo que viene, sin descansar de verdad.</p>
     </div>
     <div class="card">
       <div class="card-icon">💔</div>
       <h3 class="card-title">Los vínculos duelen</h3>
-      <p class="card-desc">En tus relaciones hay algo que se repite y no entendés por qué. Ponés límites y generan conflicto. O tenés miedo de que si sos vos de verdad, el otro se vaya.</p>
+      <p class="card-desc">Algo se repite en tus relaciones y no entendés por qué. Poner límites te genera conflicto.</p>
     </div>
     <div class="card">
       <div class="card-icon">🌫️</div>
       <h3 class="card-title">Todo cuesta más de lo normal</h3>
-      <p class="card-desc">Salir, responder mensajes, estar presente. Hay etapas en que lo más simple se vuelve pesado y desde afuera no se nota todo lo que estás sosteniendo.</p>
+      <p class="card-desc">Salir, responder mensajes, estar presente. Lo simple se vuelve pesado.</p>
     </div>
   </div>
 </section>
@@ -712,10 +824,10 @@
 
   <div class="servicios-grid">
     <div class="servicio">
-      <div class="servicio-num">01</div>
+      <div class="servicio-num">Sesiones</div>
       <div class="servicio-icon">🌿</div>
       <h3 class="servicio-title">Consulta Individual</h3>
-      <p class="servicio-desc">Sesiones de 50 minutos de acompañamiento psicológico individual. Trabajamos en profundidad lo que te pasa — sin apuro, con escucha real y herramientas concretas.</p>
+      <p class="servicio-desc">Sesiones de 50 minutos, en profundidad y sin apuro, con herramientas concretas.</p>
       <div class="servicio-tags">
         <span class="servicio-tag">Ansiedad</span>
         <span class="servicio-tag">Autoestima</span>
@@ -724,10 +836,10 @@
       </div>
     </div>
     <div class="servicio">
-      <div class="servicio-num">02</div>
+      <div class="servicio-num">Online</div>
       <div class="servicio-icon">💻</div>
       <h3 class="servicio-title">Atención Virtual</h3>
-      <p class="servicio-desc">Las mismas sesiones, desde donde estés. La terapia online es igual de efectiva y te da la flexibilidad de hacerlo desde tu espacio. Para todo Uruguay y el exterior.</p>
+      <p class="servicio-desc">Las mismas sesiones, desde donde estés — para todo Uruguay y el exterior.</p>
       <div class="servicio-tags">
         <span class="servicio-tag">Todo Uruguay</span>
         <span class="servicio-tag">Flexible</span>
@@ -735,10 +847,10 @@
       </div>
     </div>
     <div class="servicio">
-      <div class="servicio-num">03</div>
+      <div class="servicio-num">Académico</div>
       <div class="servicio-icon">📚</div>
       <h3 class="servicio-title">Tutoría de TFG</h3>
-      <p class="servicio-desc">Acompañamiento metodológico y de escritura para trabajos finales de grado en Psicología y áreas afines. Orientación personalizada en cada etapa del proceso.</p>
+      <p class="servicio-desc">Acompañamiento metodológico y de escritura para tesis en Psicología y áreas afines.</p>
       <div class="servicio-tags">
         <span class="servicio-tag">Metodología</span>
         <span class="servicio-tag">Redacción</span>
@@ -746,10 +858,10 @@
       </div>
     </div>
     <div class="servicio">
-      <div class="servicio-num">04</div>
+      <div class="servicio-num">Grupal</div>
       <div class="servicio-icon">🎙️</div>
       <h3 class="servicio-title">Charlas y Talleres</h3>
-      <p class="servicio-desc">Charlas sobre salud mental para grupos, instituciones o empresas. Temas como manejo del estrés, vínculos saludables, inteligencia emocional y bienestar.</p>
+      <p class="servicio-desc">Charlas sobre salud mental para grupos, empresas e instituciones, a medida.</p>
       <div class="servicio-tags">
         <span class="servicio-tag">Grupos</span>
         <span class="servicio-tag">Empresas</span>
@@ -772,28 +884,28 @@
       <div class="step-num">1</div>
       <div class="step-content">
         <h3 class="step-title">Me escribís</h3>
-        <p class="step-desc">Por WhatsApp o Instagram. Me contás brevemente qué te trae y acordamos un primer turno para conocernos.</p>
+        <p class="step-desc">Por WhatsApp o Instagram, contame brevemente qué te trae.</p>
       </div>
     </div>
     <div class="step-item">
       <div class="step-num">2</div>
       <div class="step-content">
         <h3 class="step-title">Primera sesión</h3>
-        <p class="step-desc">Nos conocemos, hablás de lo que te está pasando y vemos juntes si el espacio se adapta a lo que estás buscando.</p>
+        <p class="step-desc">Nos conocemos y vemos juntes si el espacio se adapta a lo que buscás.</p>
       </div>
     </div>
     <div class="step-item">
       <div class="step-num">3</div>
       <div class="step-content">
         <h3 class="step-title">Construimos el proceso</h3>
-        <p class="step-desc">Con frecuencia semanal y compromiso real. Los cambios profundos no se logran en pocas sesiones — pero sí paso a paso.</p>
+        <p class="step-desc">Frecuencia semanal y compromiso real, paso a paso.</p>
       </div>
     </div>
     <div class="step-item">
       <div class="step-num">4</div>
       <div class="step-content">
         <h3 class="step-title">Transformación real</h3>
-        <p class="step-desc">Cuando llegue fin de año, no vas a ser la misma persona. Vas a tener otra forma de estar, pensar y resolver lo que antes te desbordaba.</p>
+        <p class="step-desc">Otra forma de estar, pensar y resolver lo que antes te desbordaba.</p>
       </div>
     </div>
   </div>
@@ -820,13 +932,9 @@
     </p>
 
     <p class="sobre-desc">
-      Soy Licenciada en Psicología y trabajo acompañando jóvenes y adultos en sus procesos 
-      emocionales desde un espacio de escucha genuina, sin juicios y con herramientas concretas.
-      Me especializo en ansiedad, vínculos y procesos emocionales complejos.
-    </p>
-    <p class="sobre-desc">
-      Además de la consulta clínica, realizo tutoría de trabajos finales de grado y participé 
-      como especialista en salud mental en medios de comunicación.
+      Soy Licenciada en Psicología y acompaño a jóvenes y adultos en sus procesos emocionales
+      desde la escucha genuina, sin juicios. Me especializo en ansiedad, vínculos y procesos
+      emocionales complejos — además de tutorías de tesis y espacios sobre salud mental en medios.
     </p>
 
     <div class="sobre-pills">
@@ -843,92 +951,77 @@
   </div>
 </section>
 
-<!-- QUOTE -->
-<section id="quote-section">
-  <p class="big-quote">
-    "A veces no se trata de estar <em>feliz</em>.<br>
-    Se trata de poder respirar sin que duela,<br>
-    de habitar el presente sin que pese."
-  </p>
-  <p class="quote-attr">— Leticia Maurente · @psico.espacioleti</p>
-</section>
+<div class="wave-divider">
+  <svg viewBox="0 0 1200 80" preserveAspectRatio="none"><path d="M0,40 C150,80 350,0 600,30 C850,60 1050,10 1200,40 L1200,80 L0,80 Z"></path></svg>
+</div>
 
-<!-- UBICACION -->
-<section id="ubicacion">
-  <div>
-    <div class="section-tag">Dónde atiendo</div>
-    <h2 class="section-title">Presencial o<br><em>virtual</em>, como prefiera</h2>
-    <p class="section-lead">Tengo consultorios en La Paloma y en Rocha. También atendo de forma virtual para todo Uruguay y el exterior.</p>
+<!-- CONECTAR: Instagram + ubicación + contacto en un solo bento -->
+<section id="conectar" class="bento-dark">
+  <div class="section-tag" style="justify-content:center; margin-left:auto; margin-right:auto;">Conectemos</div>
+  <h2 class="section-title" style="text-align:center; margin-left:auto; margin-right:auto;">¿Es tu <em>momento</em>?</h2>
+  <p class="section-lead" style="text-align:center; margin:0 auto 56px; color:rgba(255,255,255,0.65);">El primer mensaje siempre es el más difícil de mandar. No hace falta merecerse ayuda — solo querer estar mejor.</p>
 
-    <div class="ubicacion-cards">
-      <div class="ubicacion-card">
-        <div class="ubicacion-icon">📍</div>
-        <div class="ubicacion-info">
-          <div class="ubicacion-title">Consultorio 1</div>
-          <div class="ubicacion-place">La Paloma, Rocha</div>
-        </div>
+  <div class="bento-grid">
+
+    <!-- IG -->
+    <div class="bento-cell bento-ig" id="instagram">
+      <div class="bento-cell-head">
+        <span>📷 Instagram</span>
+        <span class="ig-live-badge"><span class="ig-live-dot"></span> Se actualiza solo</span>
       </div>
-      <div class="ubicacion-card">
-        <div class="ubicacion-icon">📍</div>
-        <div class="ubicacion-info">
-          <div class="ubicacion-title">Consultorio 2</div>
-          <div class="ubicacion-place">Ciudad de Rocha</div>
-        </div>
-      </div>
-      <div class="ubicacion-card">
-        <div class="ubicacion-icon">💻</div>
-        <div class="ubicacion-info">
-          <div class="ubicacion-title">Atención online</div>
-          <div class="ubicacion-place">Todo Uruguay · Exterior</div>
+      <!--
+        CÓMO CONECTAR EL FEED (para que se actualice automático con cada posteo):
+        1) Entrá a snapwidget.com (o lightwidget.com / behold.so) y creá una cuenta gratis.
+        2) Conectá @psico.espacioleti (cuenta profesional/business o creator).
+        3) Copiá el link de embed que te da el servicio, ej: https://snapwidget.com/embed/1234567
+        4) Pegalo como "src" del iframe de abajo, reemplazando el placeholder.
+      -->
+      <div class="ig-embed-frame">
+        <iframe
+          src="REEMPLAZAR_CON_TU_LINK_DE_SNAPWIDGET"
+          width="100%" height="100%"
+          frameborder="0" scrolling="no" allowtransparency="true"
+          title="Feed de Instagram @psico.espacioleti"
+          style="display:none;"
+          onload="this.style.display='block'; document.getElementById('ig-fallback-msg').style.display='none';">
+        </iframe>
+        <div class="ig-fallback" id="ig-fallback-msg">
+          🌿 Acá va a aparecer el feed en vivo.<br>
+          Mientras tanto, mirá <a href="https://instagram.com/psico.espacioleti" target="_blank">@psico.espacioleti</a>.
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="ubicacion-visual">
-    <div class="ubicacion-visual-emoji">🌊</div>
-    <h3>Costa de Rocha</h3>
-    <p>Un espacio en una de las zonas más hermosas de Uruguay. Presencial cuando podés, virtual cuando lo necesitás.</p>
-    <br>
-    <a href="https://wa.me/59891085875" target="_blank" class="btn-secondary" style="color:white; border-color:rgba(255,255,255,0.4); display:inline-flex; gap:10px; align-items:center;">
-      📅 Consultar disponibilidad
-    </a>
-  </div>
-</section>
-
-<!-- CONTACTO -->
-<section id="contacto">
-  <div class="contacto-inner">
-    <div class="section-tag" style="justify-content:center;">Empezar</div>
-    <h2 class="contacto-title">¿Es tu <em>momento</em>?</h2>
-    <p class="contacto-desc">
-      El primer mensaje siempre es el más difícil de mandar. Pero la mayoría llega pensando que su problema "no es tan grave"... y no hay que merecerse ayuda. Solo querés estar mejor. Y eso es suficiente.
-    </p>
-
-    <div class="contacto-btns">
+    <!-- WHATSAPP -->
+    <div class="bento-cell bento-wa">
+      <div class="bento-cell-head"><span>💬 Escribime</span></div>
+      <p class="bento-wa-text">El canal más rápido para agendar tu primera consulta.</p>
       <a href="https://wa.me/59891085875" target="_blank" class="btn-wa">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        Escribirme por WhatsApp
-      </a>
-      <a href="https://instagram.com/psico.espacioleti" target="_blank" class="btn-ig">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-        Seguirme en Instagram
+        091 085 875
       </a>
     </div>
 
-    <div class="contacto-divider">o contactá directamente</div>
-
-    <div class="contacto-info-row">
-      <div class="contacto-info-item">
-        📱 <span>WhatsApp: <strong>091 085 875</strong></span>
-      </div>
-      <div class="contacto-info-item">
-        📍 <span>La Paloma y <strong>Rocha, UY</strong></span>
-      </div>
-      <div class="contacto-info-item">
-        💻 <span>Atención <strong>virtual</strong> disponible</span>
-      </div>
+    <!-- UBICACION -->
+    <div class="bento-cell bento-loc" id="ubicacion">
+      <div class="bento-cell-head"><span>📍 Dónde atiendo</span></div>
+      <ul class="bento-loc-list">
+        <li><strong>La Paloma</strong> · Rocha</li>
+        <li><strong>Ciudad de Rocha</strong></li>
+        <li><strong>Virtual</strong> · todo Uruguay y el exterior</li>
+      </ul>
     </div>
+
+    <!-- CONTACTO / IG HANDLE -->
+    <div class="bento-cell bento-info" id="contacto">
+      <div class="bento-cell-head"><span>🌿 Seguime</span></div>
+      <a href="https://instagram.com/psico.espacioleti" target="_blank" class="btn-ig" style="width:100%; justify-content:center;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        @psico.espacioleti
+      </a>
+      <p class="bento-info-note">Psicóloga Clínica · Rocha y La Paloma, UY</p>
+    </div>
+
   </div>
 </section>
 
@@ -942,6 +1035,36 @@
 </footer>
 
 <script>
+  // Scroll progress bar
+  const progressBar = document.getElementById('scroll-progress');
+  function updateProgress() {
+    const h = document.documentElement;
+    const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    if (progressBar) progressBar.style.width = scrolled + '%';
+  }
+  document.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+
+  // Hero background follows the cursor
+  const hero = document.getElementById('hero');
+  if (hero && window.matchMedia('(pointer: fine)').matches) {
+    hero.addEventListener('mousemove', (e) => {
+      const rect = hero.getBoundingClientRect();
+      const mx = ((e.clientX - rect.left) / rect.width) * 100;
+      const my = ((e.clientY - rect.top) / rect.height) * 100;
+      hero.style.setProperty('--mx', mx + '%');
+      hero.style.setProperty('--my', my + '%');
+    });
+  }
+
+  // Breathing word, synced to the 8s ring animation (4s inhale / 4s exhale)
+  const breathWord = document.getElementById('breath-word');
+  if (breathWord && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    setInterval(() => {
+      breathWord.textContent = breathWord.textContent === 'Inhalá' ? 'Exhalá' : 'Inhalá';
+    }, 4000);
+  }
+
   // Intersection Observer for scroll animations
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(el => {
