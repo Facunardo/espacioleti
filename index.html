@@ -626,9 +626,15 @@
   .bento-loc-list li {
     font-size: 0.95rem; color: rgba(255,255,255,0.75);
     padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px;
   }
   .bento-loc-list li:last-child { border-bottom: none; padding-bottom: 0; }
   .bento-loc-list strong { color: var(--white); font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 400; }
+  .bento-loc-map {
+    font-size: 0.8rem; color: var(--terra, #C17F5A); text-decoration: none;
+    white-space: nowrap; border-bottom: 1px solid transparent; transition: border-color 0.2s ease, opacity 0.2s ease;
+  }
+  .bento-loc-map:hover, .bento-loc-map:focus-visible { border-color: currentColor; opacity: 0.85; }
 
   .bento-info-note { font-size: 0.82rem; color: rgba(255,255,255,0.55); }
 
@@ -1168,8 +1174,14 @@
     <div class="bento-cell bento-loc" id="ubicacion">
       <div class="bento-cell-head"><span>📍 Dónde atiendo</span></div>
       <ul class="bento-loc-list">
-        <li><strong>La Paloma</strong> · Rocha</li>
-        <li><strong>Ciudad de Rocha</strong></li>
+        <li>
+          <span><strong>La Paloma</strong> · Rocha</span>
+          <a href="https://www.google.com/maps/search/?api=1&query=Lic.+Leticia+Maurente+Psic%C3%B3loga+La+Paloma+Rocha+Uruguay" target="_blank" rel="noopener" class="bento-loc-map">Ver en Google Maps ↗</a>
+        </li>
+        <li>
+          <span><strong>Ciudad de Rocha</strong></span>
+          <a href="https://www.google.com/maps/search/?api=1&query=Lic.+Leticia+Maurente+Psic%C3%B3loga+Rocha+Uruguay" target="_blank" rel="noopener" class="bento-loc-map">Ver en Google Maps ↗</a>
+        </li>
         <li><strong>Virtual</strong> · todo Uruguay y el exterior</li>
       </ul>
     </div>
