@@ -1502,17 +1502,26 @@
     });
   }
 
-  // Botón flotante de chat: aparece recién al pasar el hero,
-  // para no duplicarse visualmente con el botón de WhatsApp del hero.
+  // Botón flotante de chat: se mantiene oculto en el primer pantallazo para no
+  // duplicarse visualmente con el botón grande de WhatsApp del hero, pero
+  // aparece apenas hay un scroll chico (no hace falta pasar todo el hero).
+  // Además, si alguien se queda quieto leyendo sin scrollear, aparece igual
+  // a los pocos segundos, para que el chat esté siempre a mano.
   const waFloat = document.getElementById('wa-float');
   const heroSection = document.getElementById('hero');
   if (waFloat) {
-    const toggleWaFloatVisibility = () => {
-      const threshold = heroSection ? heroSection.offsetTop + heroSection.offsetHeight * 0.6 : 400;
-      waFloat.classList.toggle('is-visible', window.scrollY > threshold);
+    let waFloatTimeoutFired = false;
+    const updateWaFloatVisibility = () => {
+      const threshold = heroSection ? heroSection.offsetTop + heroSection.offsetHeight * 0.15 : 150;
+      const shouldShow = waFloatTimeoutFired || window.scrollY > threshold;
+      waFloat.classList.toggle('is-visible', shouldShow);
     };
-    document.addEventListener('scroll', toggleWaFloatVisibility, { passive: true });
-    toggleWaFloatVisibility();
+    document.addEventListener('scroll', updateWaFloatVisibility, { passive: true });
+    updateWaFloatVisibility();
+    setTimeout(() => {
+      waFloatTimeoutFired = true;
+      updateWaFloatVisibility();
+    }, 4000);
   }
 
   // Panel de chat: menú de opciones que abre WhatsApp con un mensaje
