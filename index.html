@@ -329,7 +329,7 @@
 
   .hero-image {
     position: relative; z-index: 2;
-    display: flex; justify-content: center; align-items: center;
+    display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 24px;
   }
 
   .hero-photo-frame {
@@ -376,6 +376,17 @@
     0%, 100% { transform: scale(0.9); }
     50% { transform: scale(1); }
   }
+
+  .breath-pause-link {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem; font-weight: 500; letter-spacing: 0.02em;
+    color: var(--green-mid); background: transparent;
+    border: 1px solid rgba(43,106,79,0.22);
+    padding: 10px 20px; border-radius: 100px;
+    cursor: pointer; transition: all 0.25s;
+  }
+  .breath-pause-link:hover { background: var(--green-pale); border-color: var(--green-mid); color: var(--green-deep); }
 
   .hero-quote {
     position: absolute; bottom: -10px; left: -50px;
@@ -486,6 +497,47 @@
     margin-bottom: 12px;
   }
   .card-desc { font-size: 0.9rem; line-height: 1.7; color: rgba(255,255,255,0.65); }
+
+  /* ─── CLARIFICADOR: ¿Qué sentís hoy? ─── */
+  #clarificador { background: var(--cream); text-align: center; }
+  #clarificador .section-tag { justify-content: center; margin-left: auto; margin-right: auto; }
+  #clarificador .section-title { margin-left: auto; margin-right: auto; }
+  #clarificador .section-lead { margin: 0 auto 44px; text-align: center; }
+
+  .feeling-pills {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;
+    max-width: 720px; margin: 0 auto;
+  }
+  .feeling-pill {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem; font-weight: 500;
+    padding: 14px 24px; border-radius: 100px;
+    background: var(--white); color: var(--green-deep);
+    border: 1.5px solid rgba(43,106,79,0.18);
+    cursor: pointer; transition: all 0.25s;
+  }
+  .feeling-pill:hover { background: var(--green-pale); border-color: var(--green-mid); transform: translateY(-2px); }
+  .feeling-pill.is-active { background: var(--green-deep); color: var(--white); border-color: var(--green-deep); }
+
+  .feeling-response {
+    max-width: 560px; margin: 0 auto; overflow: hidden;
+    max-height: 0; opacity: 0;
+    transition: max-height 0.45s ease, opacity 0.35s ease, margin-top 0.45s ease;
+  }
+  .feeling-response.is-visible { max-height: 420px; opacity: 1; margin-top: 36px; }
+  .feeling-response-card {
+    background: var(--white); border: 1px solid rgba(43,106,79,0.12);
+    border-radius: 24px; padding: 32px; text-align: left;
+    box-shadow: var(--shadow-soft);
+  }
+  .feeling-response-text {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 1.2rem; line-height: 1.6; color: var(--green-deep);
+    margin-bottom: 20px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .feeling-response { transition: opacity 0.001ms !important; }
+  }
 
   /* ─── SERVICIOS ─── */
   #servicios { background: var(--white); }
@@ -858,6 +910,78 @@
     .chat-panel { transition: opacity 0.001ms !important; transform: none !important; }
   }
 
+  /* ─── PAUSA DE RESPIRACIÓN GUIADA (modal fullscreen) ─── */
+  .breath-modal {
+    position: fixed; inset: 0; z-index: 300;
+    background: var(--green-deep);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+  .breath-modal.is-open { opacity: 1; visibility: visible; pointer-events: auto; }
+
+  .breath-modal-close {
+    position: absolute; top: 28px; right: 28px;
+    background: rgba(255,255,255,0.1); border: none; color: var(--white);
+    width: 44px; height: 44px; border-radius: 50%;
+    font-size: 1.3rem; cursor: pointer; transition: background 0.2s;
+  }
+  .breath-modal-close:hover { background: rgba(255,255,255,0.2); }
+
+  .breath-modal-inner { text-align: center; padding: 24px; max-width: 480px; }
+
+  .breath-modal-rings {
+    position: relative; width: 280px; height: 280px;
+    margin: 0 auto 40px; display: flex; align-items: center; justify-content: center;
+  }
+  .breath-modal-ring {
+    position: absolute; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.3);
+    opacity: 0.8;
+    transition: transform 4s ease-in-out, opacity 4s ease-in-out;
+  }
+  .breath-modal-ring.r1 { width: 100%; height: 100%; }
+  .breath-modal-ring.r2 { width: 76%; height: 76%; border-color: rgba(255,255,255,0.4); }
+  .breath-modal-ring.r3 { width: 52%; height: 52%; border-color: rgba(255,255,255,0.55); }
+
+  .breath-modal-rings.phase-in .breath-modal-ring,
+  .breath-modal-rings.phase-hold .breath-modal-ring { transform: scale(1.06); opacity: 1; }
+  .breath-modal-rings.phase-out .breath-modal-ring { transform: scale(0.94); opacity: 0.6; }
+
+  .breath-modal-core {
+    position: relative; width: 190px; height: 190px; border-radius: 50%;
+    background: linear-gradient(155deg, #cdeccf 0%, #9fd6ab 45%, var(--green-soft) 100%);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.25), inset 0 0 40px rgba(255,255,255,0.25);
+    transition: transform 4s ease-in-out;
+  }
+  .breath-modal-rings.phase-in .breath-modal-core,
+  .breath-modal-rings.phase-hold .breath-modal-core { transform: scale(1.1); }
+  .breath-modal-rings.phase-out .breath-modal-core { transform: scale(0.92); }
+
+  .breath-modal-word {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 1.5rem; color: var(--green-deep);
+  }
+
+  .breath-modal-hint {
+    font-size: 0.9rem; line-height: 1.7; color: rgba(255,255,255,0.75);
+    max-width: 380px; margin: 0 auto;
+  }
+  .breath-modal-count {
+    font-size: 0.85rem; color: var(--green-pale); margin-top: 16px; min-height: 1.4em;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .breath-modal { transition: opacity 0.001ms !important; }
+    .breath-modal-ring, .breath-modal-core { transition: none !important; transform: none !important; }
+  }
+
+  @media (max-width: 640px) {
+    .breath-modal-rings { width: 220px; height: 220px; margin-bottom: 32px; }
+    .breath-modal-core { width: 150px; height: 150px; }
+  }
+
   /* ─── CONFIDENCIALIDAD ─── */
   .confidentiality-note {
     background: var(--green-deep); color: rgba(255,255,255,0.75);
@@ -973,6 +1097,23 @@
   <div class="chat-panel-foot">Al elegir una opción se abre WhatsApp con el mensaje ya escrito.</div>
 </div>
 
+<!-- PAUSA DE RESPIRACIÓN GUIADA -->
+<div class="breath-modal" id="breath-modal" role="dialog" aria-modal="true" aria-label="Pausa de respiración guiada" aria-hidden="true">
+  <button type="button" class="breath-modal-close" id="breath-modal-close" aria-label="Cerrar pausa">✕</button>
+  <div class="breath-modal-inner">
+    <div class="breath-modal-rings" id="breath-modal-rings">
+      <div class="breath-modal-ring r1"></div>
+      <div class="breath-modal-ring r2"></div>
+      <div class="breath-modal-ring r3"></div>
+      <div class="breath-modal-core">
+        <p class="breath-modal-word" id="breath-modal-word">Inhalá</p>
+      </div>
+    </div>
+    <p class="breath-modal-hint">Seguí el ritmo del círculo: 4 segundos para inhalar, 4 para sostener, 4 para exhalar.</p>
+    <p class="breath-modal-count" id="breath-modal-count"></p>
+  </div>
+</div>
+
 <!-- NAV -->
 <nav>
   <div class="nav-logo">Espacio <span>Leti</span></div>
@@ -1043,6 +1184,8 @@
         <cite>— Leticia Maurente</cite>
       </div>
     </div>
+
+    <button type="button" class="breath-pause-link" id="breath-pause-btn">🫁 Hacer una pausa de 1 minuto</button>
   </div>
 </section>
 
@@ -1085,6 +1228,22 @@
       <p class="card-desc">Salir, responder mensajes, estar presente. Lo simple se vuelve pesado.</p>
     </div>
   </div>
+</section>
+
+<!-- CLARIFICADOR: qué sentís hoy -->
+<section id="clarificador">
+  <div class="section-tag">Un primer paso</div>
+  <h2 class="section-title">¿Qué sentís <em>hoy</em>?</h2>
+  <p class="section-lead">Elegí lo que más resuene. No hace falta explicarlo todo — alcanza con empezar.</p>
+
+  <div class="feeling-pills" role="group" aria-label="Elegí cómo te sentís">
+    <button type="button" class="feeling-pill" data-feeling="sobrepienso">Siento que sobrepienso todo</button>
+    <button type="button" class="feeling-pill" data-feeling="limites">Me cuesta poner límites</button>
+    <button type="button" class="feeling-pill" data-feeling="cambio">Estoy atravesando un cambio</button>
+    <button type="button" class="feeling-pill" data-feeling="agotamiento">Siento agotamiento constante</button>
+  </div>
+
+  <div class="feeling-response" id="feeling-response" aria-live="polite"></div>
 </section>
 
 <!-- SERVICIOS -->
@@ -1445,17 +1604,164 @@
     el.style.transitionDelay = `${i * 0.1}s`;
   });
 
-  // Medición: evento de Google Analytics cada vez que se toca un botón de WhatsApp
-  document.querySelectorAll('[data-wa-label]').forEach(function (el) {
-    el.addEventListener('click', function () {
-      if (typeof gtag === 'function') {
-        gtag('event', 'click_whatsapp', {
-          event_category: 'contacto',
-          event_label: el.getAttribute('data-wa-label')
-        });
-      }
-    });
+  // Medición: evento de Google Analytics cada vez que se toca un botón de WhatsApp.
+  // Delegado en document (en vez de atarse a cada link al cargar la página) para
+  // que también capture los links que se generan dinámicamente, como el del
+  // clarificador de sentimientos de abajo.
+  document.addEventListener('click', function (e) {
+    const waLink = e.target.closest('[data-wa-label]');
+    if (waLink && typeof gtag === 'function') {
+      gtag('event', 'click_whatsapp', {
+        event_category: 'contacto',
+        event_label: waLink.getAttribute('data-wa-label')
+      });
+    }
   });
+
+  // Clarificador interactivo: "¿Qué sentís hoy?"
+  // Pills de sensaciones que revelan un mensaje breve y empático de Leticia
+  // más un WhatsApp con el motivo ya escrito. No es un cuestionario ni un
+  // diagnóstico — solo un punto de entrada más fácil que la página en blanco.
+  const feelingData = {
+    sobrepienso: {
+      text: 'Es normal sentir que la cabeza no frena cuando cargás con demasiado. En consulta trabajamos herramientas concretas para bajar ese ritmo y poder descansar de verdad.',
+      wa: 'Hola Leticia, siento que sobrepienso todo y me cuesta desconectar. Me gustaría agendar una consulta.'
+    },
+    limites: {
+      text: 'Poner límites no es egoísmo, es cuidado propio. Si te genera culpa o conflicto, hay mucho para trabajar ahí — y no hace falta hacerlo sola.',
+      wa: 'Hola Leticia, me cuesta poner límites en mis vínculos. Me gustaría agendar una consulta.'
+    },
+    cambio: {
+      text: 'Los cambios remueven, incluso los que elegimos. Tener un espacio para pensarlos y acompañarte en el proceso puede hacer la diferencia.',
+      wa: 'Hola Leticia, estoy atravesando un cambio importante y quería acompañamiento. Me gustaría agendar una consulta.'
+    },
+    agotamiento: {
+      text: 'El cansancio que no se va durmiendo suele tener otro origen. Vale la pena mirarlo de cerca, sin apuro y sin juzgarte.',
+      wa: 'Hola Leticia, siento agotamiento constante y quería consultarte. Me gustaría agendar una consulta.'
+    }
+  };
+
+  const feelingPills = document.querySelectorAll('.feeling-pill');
+  const feelingResponse = document.getElementById('feeling-response');
+
+  if (feelingPills.length && feelingResponse) {
+    feelingPills.forEach(function (pill) {
+      pill.setAttribute('aria-pressed', 'false');
+      pill.addEventListener('click', function () {
+        const key = pill.getAttribute('data-feeling');
+        const wasActive = pill.classList.contains('is-active');
+
+        feelingPills.forEach(function (p) {
+          p.classList.remove('is-active');
+          p.setAttribute('aria-pressed', 'false');
+        });
+
+        if (wasActive) {
+          feelingResponse.classList.remove('is-visible');
+          feelingResponse.innerHTML = '';
+          return;
+        }
+
+        pill.classList.add('is-active');
+        pill.setAttribute('aria-pressed', 'true');
+
+        const data = feelingData[key];
+        if (!data) return;
+
+        if (typeof gtag === 'function') {
+          gtag('event', 'feeling_select', { event_category: 'engagement', event_label: key });
+        }
+
+        const waHref = 'https://wa.me/59891085875?text=' + encodeURIComponent(data.wa);
+        feelingResponse.innerHTML =
+          '<div class="feeling-response-card">' +
+            '<p class="feeling-response-text">' + data.text + '</p>' +
+            '<a href="' + waHref + '" target="_blank" rel="noopener" class="btn-primary" data-wa-label="feeling_' + key + '">💬 Hablar con Leticia</a>' +
+          '</div>';
+        feelingResponse.classList.add('is-visible');
+      });
+    });
+  }
+
+  // Pausa de respiración guiada: modal fullscreen con ciclo 4s inhalar /
+  // 4s sostener / 4s exhalar, sincronizado con una vibración suave en
+  // dispositivos que la soportan (Android/Chrome — iOS Safari no implementa
+  // la Vibration API, así que ahí el botón funciona igual mostrando el
+  // círculo, simplemente sin el pulso táctil).
+  const breathPauseBtn = document.getElementById('breath-pause-btn');
+  const breathModal = document.getElementById('breath-modal');
+  const breathModalClose = document.getElementById('breath-modal-close');
+  const breathModalRings = document.getElementById('breath-modal-rings');
+  const breathModalWord = document.getElementById('breath-modal-word');
+  const breathModalCount = document.getElementById('breath-modal-count');
+
+  if (breathPauseBtn && breathModal && breathModalRings && breathModalWord) {
+    const breathPhases = [
+      { word: 'Inhalá', className: 'phase-in', vibrate: 200 },
+      { word: 'Sostené', className: 'phase-hold', vibrate: 60 },
+      { word: 'Exhalá', className: 'phase-out', vibrate: 200 }
+    ];
+    const BREATH_TOTAL_CYCLES = 4;
+    let breathTimer = null;
+    let breathPhaseIndex = 0;
+    let breathCycle = 0;
+
+    function vibrateIfSupported(pattern) {
+      try {
+        if ('vibrate' in navigator) navigator.vibrate(pattern);
+      } catch (err) { /* la vibración es un plus, no algo crítico */ }
+    }
+
+    function runBreathPhase() {
+      const phase = breathPhases[breathPhaseIndex];
+      breathModalWord.textContent = phase.word;
+      breathModalRings.classList.remove('phase-in', 'phase-hold', 'phase-out');
+      breathModalRings.classList.add(phase.className);
+      vibrateIfSupported(phase.vibrate);
+
+      breathPhaseIndex++;
+      if (breathPhaseIndex >= breathPhases.length) {
+        breathPhaseIndex = 0;
+        breathCycle++;
+        if (breathModalCount) {
+          breathModalCount.textContent = breathCycle >= BREATH_TOTAL_CYCLES
+            ? 'Cuando quieras, volvé a tu día. Podés cerrar esta pausa cuando gustes.'
+            : '';
+        }
+      }
+    }
+
+    function openBreathModal() {
+      breathModal.classList.add('is-open');
+      breathModal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      breathPhaseIndex = 0;
+      breathCycle = 0;
+      if (breathModalCount) breathModalCount.textContent = '';
+      if (typeof gtag === 'function') {
+        gtag('event', 'breath_pause_start', { event_category: 'engagement' });
+      }
+      runBreathPhase();
+      breathTimer = setInterval(runBreathPhase, 4000);
+    }
+
+    function closeBreathModal() {
+      breathModal.classList.remove('is-open');
+      breathModal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      if (breathTimer) { clearInterval(breathTimer); breathTimer = null; }
+      vibrateIfSupported(0);
+    }
+
+    breathPauseBtn.addEventListener('click', openBreathModal);
+    if (breathModalClose) breathModalClose.addEventListener('click', closeBreathModal);
+    breathModal.addEventListener('click', function (e) {
+      if (e.target === breathModal) closeBreathModal();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && breathModal.classList.contains('is-open')) closeBreathModal();
+    });
+  }
 </script>
 
 </body>
