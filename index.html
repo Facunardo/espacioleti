@@ -111,6 +111,51 @@
   }
   .nav-cta:hover { background: var(--green-mid) !important; color: var(--white) !important; }
 
+  /* ─── MENÚ MÓVIL (hamburguesa) ─── */
+  .nav-toggle {
+    display: none;
+    background: none; border: none; cursor: pointer;
+    width: 40px; height: 40px; padding: 8px;
+    align-items: center; justify-content: center;
+    flex-direction: column; gap: 5px;
+  }
+  .nav-toggle-bar {
+    display: block; width: 100%; height: 2px;
+    background: var(--green-deep); border-radius: 2px;
+    transition: transform 0.25s ease, opacity 0.2s ease;
+  }
+  .nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(2) { opacity: 0; }
+  .nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  @media (max-width: 1024px) {
+    .nav-toggle { display: flex; }
+    .nav-links {
+      display: flex; flex-direction: column; align-items: stretch;
+      gap: 0; list-style: none;
+      position: fixed; top: 0; right: 0;
+      width: min(320px, 82vw); height: 100vh;
+      background: var(--cream); box-shadow: -12px 0 40px rgba(0,0,0,0.12);
+      padding: 96px 32px 32px;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      z-index: 99;
+    }
+    .nav-links.is-open { transform: translateX(0); }
+    .nav-links li { border-bottom: 1px solid rgba(43,106,79,0.1); }
+    .nav-links li:last-child { border-bottom: none; margin-top: 20px; }
+    .nav-links a { display: block; padding: 18px 4px; font-size: 0.95rem; }
+    .nav-links .nav-cta { display: inline-block; text-align: center; padding: 14px 22px; }
+  }
+
+  .nav-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 98;
+    background: rgba(27,77,53,0.35);
+    opacity: 0; transition: opacity 0.25s ease;
+  }
+  .nav-overlay.is-open { display: block; opacity: 1; }
+
   /* ─── HERO ─── */
   #hero {
     min-height: 100vh;
@@ -768,7 +813,6 @@
   /* ─── RESPONSIVE ─── */
   @media (max-width: 1024px) {
     nav { padding: 16px 32px; }
-    .nav-links { display: none; }
     #hero { grid-template-columns: 1fr; padding: 120px 40px 60px; text-align: center; }
     .hero-text { padding-right: 0; }
     .hero-desc { max-width: 100%; }
@@ -828,7 +872,12 @@
 <!-- NAV -->
 <nav>
   <div class="nav-logo">Espacio <span>Leti</span></div>
-  <ul class="nav-links">
+  <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Abrir menú" aria-haspopup="true" aria-expanded="false" aria-controls="nav-links">
+    <span class="nav-toggle-bar"></span>
+    <span class="nav-toggle-bar"></span>
+    <span class="nav-toggle-bar"></span>
+  </button>
+  <ul class="nav-links" id="nav-links">
     <li><a href="#servicios">Servicios</a></li>
     <li><a href="#sobre-mi">Sobre mí</a></li>
     <li><a href="#instagram">Instagram</a></li>
@@ -836,6 +885,7 @@
     <li><a href="#contacto" class="nav-cta">Agendar consulta</a></li>
   </ul>
 </nav>
+<div class="nav-overlay" id="nav-overlay"></div>
 
 <!-- HERO -->
 <section id="hero">
@@ -1156,6 +1206,36 @@
   }
   document.addEventListener('scroll', updateProgress, { passive: true });
   updateProgress();
+
+  // Menú móvil (hamburguesa): despliega los links de navegación
+  // en pantallas angostas, donde no entran en el header.
+  const navToggle = document.getElementById('nav-toggle');
+  const navLinks = document.getElementById('nav-links');
+  const navOverlay = document.getElementById('nav-overlay');
+
+  function setNavOpen(open) {
+    if (!navToggle || !navLinks || !navOverlay) return;
+    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    navToggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+    navLinks.classList.toggle('is-open', open);
+    navOverlay.classList.toggle('is-open', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+
+  if (navToggle && navLinks && navOverlay) {
+    navToggle.addEventListener('click', () => {
+      setNavOpen(!navLinks.classList.contains('is-open'));
+    });
+    navOverlay.addEventListener('click', () => setNavOpen(false));
+    navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setNavOpen(false)));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') setNavOpen(false);
+    });
+    // Si la ventana vuelve a un ancho de escritorio con el menú abierto, lo cerramos.
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 1024) setNavOpen(false);
+    });
+  }
 
   // Botón flotante de chat: aparece recién al pasar el hero,
   // para no duplicarse visualmente con el botón de WhatsApp del hero.
