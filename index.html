@@ -79,6 +79,80 @@
 }
 </script>
 
+<!-- Datos estructurados de preguntas frecuentes (para Google y motores de IA) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "¿Cómo agendo mi primera consulta?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Escríbele a Leticia por WhatsApp contándole brevemente qué te trae. Ella te responde para coordinar el día y el horario de tu primera sesión, ya sea presencial u online."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Las sesiones son presenciales u online?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ambas modalidades están disponibles. Puedes atenderte presencialmente en Rocha o La Paloma, o de forma virtual desde cualquier lugar de Uruguay o del exterior."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cuánto dura una sesión?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Cada sesión dura 50 minutos y se trabaja en profundidad, sin apuro, con herramientas concretas para tu día a día."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Qué temas se pueden trabajar en consulta?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ansiedad, autoestima, duelo, límites, cambios vitales, agotamiento y procesos emocionales en general, tanto en jóvenes como en adultos."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Hacen tutorías de TFG o tesis?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sí. Leticia acompaña metodológicamente y en la escritura a estudiantes de Psicología y áreas afines que están cursando su Trabajo Final de Grado o tesis."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Ofrecen charlas o talleres para grupos y empresas?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sí, se organizan charlas sobre salud mental a medida para grupos, empresas e instituciones. Puedes escribir por WhatsApp para conversar sobre el formato que necesitas."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Es confidencial lo que se habla en consulta?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sí. El espacio de atención funciona bajo estricto secreto profesional y código de ética."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cómo puedo conocer más sobre Leticia antes de escribir?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Puedes seguir a @psico.espacioleti en Instagram, donde comparte contenido sobre salud mental, o escuchar sus participaciones en radio sobre estrés, salud mental y otros temas."
+      }
+    }
+  ]
+}
+</script>
+
 <style>
   :root {
     --cream: #F5F0E8;
@@ -1066,6 +1140,45 @@
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--cream); }
   ::-webkit-scrollbar-thumb { background: var(--sage); border-radius: 10px; }
+
+  /* ─── FAQ ─── */
+  #faq { background: var(--white); }
+  .faq-list {
+    max-width: 720px; margin-top: 48px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .faq-item {
+    background: var(--cream);
+    border: 1px solid rgba(27,77,53,0.1);
+    border-radius: 20px;
+    padding: 0 28px;
+    transition: background 0.25s;
+  }
+  .faq-item[open] { background: var(--green-pale); }
+  .faq-item summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 20px 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    color: var(--green-deep);
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::after {
+    content: '+';
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.4rem; line-height: 1;
+    color: var(--terra);
+    flex-shrink: 0;
+  }
+  .faq-item[open] summary::after { content: '\2212'; }
+  .faq-item p {
+    padding: 0 0 24px;
+    color: var(--text-light);
+    font-size: 0.98rem;
+    line-height: 1.7;
+  }
 </style>
 </head>
 <body>
@@ -1130,6 +1243,7 @@
     <li><a href="#sobre-mi">Sobre mí</a></li>
     <li><a href="#instagram">Instagram</a></li>
     <li><a href="#ubicacion">Dónde atiendo</a></li>
+    <li><a href="#faq">Preguntas</a></li>
     <li><a href="#contacto" class="nav-cta">Agendar consulta</a></li>
   </ul>
 </nav>
@@ -1381,6 +1495,48 @@
 <div class="wave-divider">
   <svg viewBox="0 0 1200 80" preserveAspectRatio="none"><path d="M0,40 C150,80 350,0 600,30 C850,60 1050,10 1200,40 L1200,80 L0,80 Z"></path></svg>
 </div>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="section-tag">Preguntas frecuentes</div>
+  <h2 class="section-title">Antes de <em>escribir</em></h2>
+  <p class="section-lead">Las dudas más comunes antes de agendar la primera consulta.</p>
+
+  <div class="faq-list">
+    <details class="faq-item">
+      <summary>¿Cómo agendo mi primera consulta?</summary>
+      <p>Escríbele a Leticia por WhatsApp contándole brevemente qué te trae. Ella te responde para coordinar el día y el horario de tu primera sesión, ya sea presencial u online.</p>
+    </details>
+    <details class="faq-item">
+      <summary>¿Las sesiones son presenciales u online?</summary>
+      <p>Ambas modalidades están disponibles. Puedes atenderte presencialmente en Rocha o La Paloma, o de forma virtual desde cualquier lugar de Uruguay o del exterior.</p>
+    </details>
+    <details class="faq-item">
+      <summary>¿Cuánto dura una sesión?</summary>
+      <p>Cada sesión dura 50 minutos y se trabaja en profundidad, sin apuro, con herramientas concretas para tu día a día.</p>
+    </details>
+    <details class="faq-item">
+      <summary>¿Qué temas se pueden trabajar en consulta?</summary>
+      <p>Ansiedad, autoestima, duelo, límites, cambios vitales, agotamiento y procesos emocionales en general, tanto en jóvenes como en adultos.</p>
+    </details>
+    <details class="faq-item">
+      <summary>¿Hacen tutorías de TFG o tesis?</summary>
+      <p>Sí. Leticia acompaña metodológicamente y en la escritura a estudiantes de Psicología y áreas afines que están cursando su Trabajo Final de Grado o tesis.</p>
+    </details>
+    <details class="faq-item">
+      <summary>¿Ofrecen charlas o talleres para grupos y empresas?</summary>
+      <p>Sí, se organizan charlas sobre salud mental a medida para grupos, empresas e instituciones. Puedes escribir por WhatsApp para conversar sobre el formato que necesitas.</p>
+    </details>
+    <details class="faq-item">
+      <summary>¿Es confidencial lo que se habla en consulta?</summary>
+      <p>Sí. El espacio de atención funciona bajo estricto secreto profesional y código de ética.</p>
+    </details>
+    <details class="faq-item">
+      <summary>¿Cómo puedo conocer más sobre Leticia antes de escribir?</summary>
+      <p>Puedes seguir a @psico.espacioleti en Instagram, donde comparte contenido sobre salud mental, o escuchar sus participaciones en radio sobre estrés, salud mental y otros temas.</p>
+    </details>
+  </div>
+</section>
 
 <!-- CONECTAR: Instagram + ubicación + contacto en un solo bento -->
 <section id="conectar" class="bento-dark">
